@@ -54,15 +54,6 @@
                 <h4 style="margin-top: 20px; margin-bottom: 10px; color: #333;">Penjual</h4>
                 <p><strong>{{ $product->seller->store_name ?? 'Unknown' }}</strong></p>
                 <p style="color: #999; font-size: 14px;">{{ $product->seller->city ?? '' }}, {{ $product->seller->province ?? '' }}</p>
-                
-                <div style="margin-top: 30px; display: flex; gap: 15px;">
-                    <button onclick="alert('Fitur pembelian belum tersedia')" class="btn btn-primary" style="flex: 1; padding: 15px; font-size: 16px; font-weight: 600;">
-                        🛒 Beli Sekarang
-                    </button>
-                    <button onclick="alert('Fitur keranjang belum tersedia')" class="btn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: 600; background: white; color: #667eea; border: 2px solid #667eea;">
-                        🛍️ + Keranjang
-                    </button>
-                </div>
             </div>
         </div>
     </div>

@@ -24,13 +24,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'platform',
         ]);
 
-        // Create test user (pengunjung)
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'role' => 'pengunjung',
-        ]);
-
         // Seed kategori produk dan penjual terlebih dahulu
         $this->call([
             KategoriProdukSeeder::class,

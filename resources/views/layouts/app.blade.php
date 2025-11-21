@@ -389,23 +389,36 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
-            <h1>🛍️ Marketplace</h1>
-            <p>
-                @if(Auth::check() && Auth::user()->isPlatform())
-                    Platform Admin
-                @elseif(Auth::check() && Auth::user()->isPenjual())
-                    Dashboard Penjual
-                @else
-                    Pengunjung
-                @endif
-            </p>
+            <h1>🛍️ MartPlace</h1>
+            @if(Auth::check())
+                <p>
+                    @if(Auth::user()->isPlatform())
+                        Platform Admin
+                    @else
+                        Dashboard Penjual
+                    @endif
+                </p>
+            @else
+                <p>Marketplace Indonesia</p>
+            @endif
         </div>
         <div class="sidebar-menu">
+            <!-- Menu untuk semua (guest & auth) -->
+            <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
+                <i>🛍️</i> Katalog Produk
+            </a>
+            <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
+                <i>⭐</i> Review Produk
+            </a>
+            
+            @if(Auth::check())
+            <hr style="border: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+            
             <a href="/dashboard" class="menu-item {{ Request::is('dashboard') ? 'active' : '' }}">
                 <i>📊</i> Dashboard
             </a>
             
-            @if(Auth::check() && Auth::user()->isPlatform())
+            @if(Auth::user()->isPlatform())
                 <!-- Menu untuk Platform Admin -->
                 <a href="/sellers" class="menu-item {{ Request::is('sellers*') ? 'active' : '' }}">
                     <i>👥</i> Kelola Penjual
@@ -418,13 +431,10 @@
                 </a>
             @endif
             
-            @if(Auth::check() && Auth::user()->isPenjual())
+            @if(Auth::user()->isPenjual())
                 <!-- Menu untuk Penjual -->
                 <a href="/products/create" class="menu-item {{ Request::is('products/create') ? 'active' : '' }}">
                     <i>➕</i> Upload Produk
-                </a>
-                <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
-                    <i>📦</i> Produk Saya
                 </a>
                 <a href="/seller/dashboard" class="menu-item {{ Request::is('seller/dashboard*') ? 'active' : '' }}">
                     <i>📊</i> Dashboard Toko
@@ -433,15 +443,6 @@
                     <i>📄</i> Laporan Toko
                 </a>
             @endif
-            
-            @if(!Auth::check() || Auth::user()->isPengunjung() || Auth::user()->isPenjual())
-                <!-- Menu untuk Pengunjung & Penjual (bisa browse) -->
-                <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
-                    <i>🛍️</i> Katalog Produk
-                </a>
-                <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
-                    <i>⭐</i> Review Produk
-                </a>
             @endif
         </div>
     </div>
@@ -461,7 +462,8 @@
                         <button type="submit" class="btn-logout">Logout</button>
                     </form>
                 @else
-                    <a href="/login" class="btn-logout" style="text-decoration: none;">Login</a>
+                    <a href="/register" style="padding: 10px 20px; background: white; color: #667eea; border: 2px solid #667eea; border-radius: 8px; text-decoration: none; font-weight: 500; margin-right: 10px;">Daftar</a>
+                    <a href="/login" style="padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 500;">Login</a>
                 @endif
             </div>
         </nav>

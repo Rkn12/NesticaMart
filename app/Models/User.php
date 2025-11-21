@@ -71,12 +71,4 @@ class User extends Authenticatable
     {
         return $this->role === 'penjual';
     }
-
-    /**
-     * Check if user is visitor
-     */
-    public function isPengunjung()
-    {
-        return $this->role === 'pengunjung';
-    }
 }

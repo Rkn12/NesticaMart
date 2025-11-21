@@ -14,16 +14,32 @@ use Illuminate\Support\Facades\Route;
 // AUTH ROUTES
 // ========================================
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect('/products');
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Dashboard (requires auth)
+// Registration untuk penjual
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
+// ========================================
+// PUBLIC ROUTES (Tanpa Login untuk Pengunjung)
+// ========================================
+// Katalog produk - bisa diakses tanpa login
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/products/{id}/review', [ProductController::class, 'reviewForm'])->name('products.review');
+
+// Review - bisa submit tanpa login
+Route::post('/reviews', [ProductReviewController::class, 'store']);
+Route::get('/reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
+
+// ========================================
+// PROTECTED ROUTES (Requires Auth)
+// ========================================
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('home');
@@ -81,12 +97,6 @@ Route::middleware('auth')->group(function () {
         })->name('seller.reports');
     });
     
-    // Public Routes (Pengunjung + Penjual can access)
-    Route::get('/sellers/create', function () {
-        return view('sellers.create');
-    })->name('sellers.create');
-    
-    Route::get('/reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
 });
 
 // ========================================
@@ -110,20 +120,11 @@ Route::prefix('api/sellers')->group(function () {
 });
 
 // ========================================
-// PRODUCT ROUTES (SRS-03, SRS-04, SRS-05)
+// PRODUCT API ROUTES (Protected - untuk penjual)
 // ========================================
-Route::prefix('products')->group(function () {
-    // Get katalog produk dengan pencarian
-    Route::get('/', [ProductController::class, 'index'])->name('products.index');
-    
+Route::prefix('api/products')->middleware('auth')->group(function () {
     // Get kategori produk
     Route::get('/categories', [ProductController::class, 'getCategories']);
-    
-    // Get detail produk
-    Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
-    
-    // Halaman tulis review
-    Route::get('/{id}/review', [ProductController::class, 'reviewForm'])->name('products.review');
     
     // Upload/create produk (penjual)
     Route::post('/', [ProductController::class, 'store']);
@@ -139,23 +140,20 @@ Route::prefix('products')->group(function () {
 });
 
 // ========================================
-// PRODUCT REVIEW ROUTES (SRS-06)
+// REVIEW API ROUTES (untuk data stats)
 // ========================================
-Route::prefix('reviews')->group(function () {
-    // Tambah review & rating
-    Route::post('/', [ProductReviewController::class, 'store']);
-    
+Route::prefix('api/reviews')->group(function () {
     // Get review by product
     Route::get('/product/{product_id}', [ProductReviewController::class, 'getByProduct']);
     
     // Get rating stats
     Route::get('/product/{product_id}/stats', [ProductReviewController::class, 'getRatingStats']);
     
-    // Update review
-    Route::put('/{id}', [ProductReviewController::class, 'update']);
+    // Update review (protected)
+    Route::put('/{id}', [ProductReviewController::class, 'update'])->middleware('auth');
     
-    // Delete review
-    Route::delete('/{id}', [ProductReviewController::class, 'destroy']);
+    // Delete review (protected)
+    Route::delete('/{id}', [ProductReviewController::class, 'destroy'])->middleware('auth');
 });
 
 // ========================================

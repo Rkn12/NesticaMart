@@ -41,17 +41,6 @@
                     <p style="color: #999; font-size: 13px; margin-bottom: 10px;">{{ $product->seller->store_name ?? 'Unknown' }}</p>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                         <span style="color: #f39c12;">⭐ {{ number_format($product->average_rating ?? 0, 1) }}</span>
-                        <span style="color: #666; font-size: 12px;">
-                            @php
-                                $sold = $product->sold_count ?? 0;
-                                if ($sold >= 1000) {
-                                    $soldText = floor($sold / 1000) . 'rb+';
-                                } else {
-                                    $soldText = $sold;
-                                }
-                            @endphp
-                            🛒 {{ $soldText }} terjual
-                        </span>
                     </div>
                 </div>
             @empty

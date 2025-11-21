@@ -53,29 +53,74 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle registration
+     * Handle registration - Registrasi Penjual
      */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            // Data Toko
+            'store_name' => 'required|string|max:150',
+            'store_description' => 'required|string',
+            
+            // Data Pemilik (PIC = Pemilik)
+            'owner_name' => 'required|string|max:150',
+            'nik' => 'required|string|size:16|unique:sellers,nik',
+            'phone' => 'required|string|max:20',
+            'email' => 'required|string|email|max:150|unique:sellers,email',
+            'foto_ktp_pic' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'file_ktp_pic' => 'required|mimes:jpeg,png,jpg,pdf|max:2048',
+            
+            // Alamat
+            'address' => 'required|string',
+            'rt' => 'required|string|size:3|regex:/^[0-9]{3}$/',
+            'rw' => 'required|string|size:3|regex:/^[0-9]{3}$/',
+            'kelurahan' => 'required|string|max:100',
+            'subdistrict' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'province' => 'required|string|max:100',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        $user = User::create([
-            'name' => $request->name,
+        // Upload files
+        $fotoKtpPath = null;
+        $fileKtpPath = null;
+        
+        if ($request->hasFile('foto_ktp_pic')) {
+            $fotoKtpPath = $request->file('foto_ktp_pic')->store('ktp/foto', 'public');
+        }
+        
+        if ($request->hasFile('file_ktp_pic')) {
+            $fileKtpPath = $request->file('file_ktp_pic')->store('ktp/file', 'public');
+        }
+
+        // Create seller record with status pending
+        // PIC = Pemilik (data sama)
+        $seller = \App\Models\Seller::create([
+            'store_name' => $request->store_name,
+            'store_description' => $request->store_description,
+            'owner_name' => $request->owner_name,
+            'nik' => $request->nik,
+            'phone' => $request->phone,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'province' => $request->province,
+            'city' => $request->city,
+            'subdistrict' => $request->subdistrict,
+            'kelurahan' => $request->kelurahan,
+            'rt' => $request->rt,
+            'rw' => $request->rw,
+            'address' => $request->address,
+            'pic_name' => $request->owner_name, // PIC = Pemilik
+            'pic_phone' => $request->phone,
+            'pic_email' => $request->email,
+            'foto_ktp_pic' => $fotoKtpPath,
+            'file_ktp_pic' => $fileKtpPath,
+            'status' => 'pending',
         ]);
 
-        Auth::login($user);
-
-        return redirect('/dashboard');
+        return redirect('/login')->with('success', 'Registrasi berhasil! Akun Anda akan diverifikasi oleh admin. Silakan tunggu email konfirmasi.');
     }
 
     /**
