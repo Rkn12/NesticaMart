@@ -1,0 +1,170 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use App\Models\ProductReview;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+
+class ProductReviewController extends Controller
+{
+    /**
+     * SRS-MartPlace-06: Pemberian komentar dan rating pada produk
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'reviewer_name' => 'required|string|max:150',
+            'reviewer_phone' => 'required|string|max:20',
+            'reviewer_email' => 'required|email|max:150',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Simpan review
+        $review = ProductReview::create($request->all());
+
+        // Update average rating produk
+        $product = Product::with('seller')->findOrFail($request->product_id);
+        $averageRating = $product->reviews()->avg('rating');
+        $product->update(['average_rating' => round($averageRating, 2)]);
+
+        // SRS-MartPlace-06: Kirim notifikasi email ke penjual
+        $this->sendReviewNotificationEmail($product, $review);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Review berhasil ditambahkan. Terima kasih atas feedback Anda!',
+            'data' => $review
+        ], 201);
+    }
+
+    /**
+     * Kirim email notifikasi review ke penjual
+     */
+    private function sendReviewNotificationEmail($product, $review)
+    {
+        $seller = $product->seller;
+        $subject = "Produk Anda Mendapat Review Baru - {$product->name}";
+        
+        $message = "Halo {$seller->owner_name},\n\n";
+        $message .= "Produk '{$product->name}' Anda telah mendapatkan review baru.\n\n";
+        $message .= "Rating: {$review->rating}/5\n";
+        $message .= "Reviewer: {$review->reviewer_name}\n";
+        $message .= "Email: {$review->reviewer_email}\n";
+        
+        if ($review->comment) {
+            $message .= "Komentar: {$review->comment}\n";
+        }
+        
+        $message .= "\nRating rata-rata produk sekarang: {$product->average_rating}/5\n";
+
+        Mail::raw($message, function ($mail) use ($seller, $subject) {
+            $mail->to($seller->email)
+                ->subject($subject);
+        });
+    }
+
+    /**
+     * Get review berdasarkan produk
+     */
+    public function getByProduct($product_id)
+    {
+        $reviews = ProductReview::where('product_id', $product_id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'data' => $reviews
+        ]);
+    }
+
+    /**
+     * Get statistik rating produk
+     */
+    public function getRatingStats($product_id)
+    {
+        $product = Product::findOrFail($product_id);
+        
+        $stats = [
+            'average_rating' => $product->average_rating,
+            'total_reviews' => $product->reviews()->count(),
+            'rating_distribution' => [
+                5 => $product->reviews()->where('rating', 5)->count(),
+                4 => $product->reviews()->where('rating', 4)->count(),
+                3 => $product->reviews()->where('rating', 3)->count(),
+                2 => $product->reviews()->where('rating', 2)->count(),
+                1 => $product->reviews()->where('rating', 1)->count(),
+            ]
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => $stats
+        ]);
+    }
+
+    /**
+     * Update review (opsional)
+     */
+    public function update(Request $request, $id)
+    {
+        $review = ProductReview::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'rating' => 'sometimes|integer|min:1|max:5',
+            'comment' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $review->update($request->only(['rating', 'comment']));
+
+        // Update average rating produk
+        $product = $review->product;
+        $averageRating = $product->reviews()->avg('rating');
+        $product->update(['average_rating' => round($averageRating, 2)]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Review berhasil diupdate.',
+            'data' => $review
+        ]);
+    }
+
+    /**
+     * Hapus review
+     */
+    public function destroy($id)
+    {
+        $review = ProductReview::findOrFail($id);
+        $product = $review->product;
+        
+        $review->delete();
+
+        // Update average rating produk
+        $averageRating = $product->reviews()->avg('rating') ?? 0;
+        $product->update(['average_rating' => round($averageRating, 2)]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Review berhasil dihapus.'
+        ]);
+    }
+}

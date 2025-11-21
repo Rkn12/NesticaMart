@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'seller_id',
     ];
 
     /**
@@ -44,5 +46,37 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relasi ke seller
+     */
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class);
+    }
+
+    /**
+     * Check if user is platform admin
+     */
+    public function isPlatform()
+    {
+        return $this->role === 'platform';
+    }
+
+    /**
+     * Check if user is seller
+     */
+    public function isPenjual()
+    {
+        return $this->role === 'penjual';
+    }
+
+    /**
+     * Check if user is visitor
+     */
+    public function isPengunjung()
+    {
+        return $this->role === 'pengunjung';
     }
 }
