@@ -15,13 +15,13 @@ class KategoriProdukSeeder extends Seeder
     {
         $categories = [
             ['name' => 'Elektronik', 'description' => 'Peralatan elektronik seperti smartphone, laptop, TV, dan aksesoris'],
-            ['name' => 'Fashion Pria', 'description' => 'Pakaian, sepatu, dan aksesoris untuk pria'],
-            ['name' => 'Fashion Wanita', 'description' => 'Pakaian, sepatu, dan aksesoris untuk wanita'],
+            ['name' => 'Fashion', 'description' => 'Pakaian, sepatu, dan aksesoris pria dan wanita'],
+            ['name' => 'Buku', 'description' => 'Buku, novel, majalah, dan komik'],
             ['name' => 'Makanan & Minuman', 'description' => 'Produk makanan dan minuman'],
-            ['name' => 'Kesehatan & Kecantikan', 'description' => 'Produk kesehatan dan kecantikan'],
+            ['name' => 'Kecantikan', 'description' => 'Produk skincare, makeup, dan perawatan tubuh'],
             ['name' => 'Olahraga', 'description' => 'Peralatan dan perlengkapan olahraga'],
             ['name' => 'Rumah Tangga', 'description' => 'Peralatan dan perlengkapan rumah tangga'],
-            ['name' => 'Buku & Alat Tulis', 'description' => 'Buku, majalah, dan alat tulis'],
+            ['name' => 'Alat Tulis', 'description' => 'Alat tulis dan perlengkapan kantor'],
             ['name' => 'Mainan & Hobi', 'description' => 'Mainan anak dan produk hobi'],
             ['name' => 'Otomotif', 'description' => 'Aksesoris dan suku cadang kendaraan'],
         ];

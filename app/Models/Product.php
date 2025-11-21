@@ -16,6 +16,7 @@ class Product extends Model
         'description',
         'price',
         'stock',
+        'sold_count',
         'weight',
         'condition',
         'location_province',

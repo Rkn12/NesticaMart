@@ -9,92 +9,78 @@
             <h3>Katalog Produk</h3>
         </div>
         
-        <div class="search-bar">
-            <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
-            <select id="categoryFilter" class="form-control" style="max-width: 200px;">
+        <form method="GET" action="{{ route('products.index') }}" class="search-bar" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px;">
+            <input type="text" name="search" class="form-control" placeholder="Cari nama produk..." value="{{ request('search') }}">
+            
+            <input type="text" name="store_name" class="form-control" placeholder="Nama toko..." value="{{ request('store_name') }}">
+            
+            <select name="category_id" class="form-control">
                 <option value="">Semua Kategori</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
             </select>
-            <input type="text" id="provinceFilter" class="form-control" placeholder="Provinsi" style="max-width: 150px;">
-            <button class="btn btn-primary" onclick="loadProducts()">Cari</button>
-        </div>
+            
+            <input type="text" name="city" class="form-control" placeholder="Kota/Kabupaten..." value="{{ request('city') }}">
+            
+            <input type="text" name="province" class="form-control" placeholder="Provinsi..." value="{{ request('province') }}">
+            
+            <button type="submit" class="btn btn-primary" style="grid-column: span 1;">🔍 Cari</button>
+        </form>
         
-        <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
-            <div style="text-align: center; padding: 40px; grid-column: 1/-1;">
-                <p>Loading...</p>
-            </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+            @forelse($products as $product)
+                <div style="background: white; border: 1px solid #eee; border-radius: 10px; padding: 20px; cursor: pointer;" onclick="window.location.href='{{ route('products.show', $product->id) }}'">
+                    <div style="height: 150px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 5px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                        📦
+                    </div>
+                    <h4 style="margin-bottom: 10px; color: #333; font-size: 16px; height: 40px; overflow: hidden;">{{ $product->name }}</h4>
+                    <p style="color: #667eea; font-size: 18px; font-weight: bold; margin-bottom: 5px;">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                    <p style="color: #999; font-size: 13px; margin-bottom: 10px;">{{ $product->seller->store_name ?? 'Unknown' }}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <span style="color: #f39c12;">⭐ {{ number_format($product->average_rating ?? 0, 1) }}</span>
+                        <span style="color: #666; font-size: 12px;">
+                            @php
+                                $sold = $product->sold_count ?? 0;
+                                if ($sold >= 1000) {
+                                    $soldText = floor($sold / 1000) . 'rb+';
+                                } else {
+                                    $soldText = $sold;
+                                }
+                            @endphp
+                            🛒 {{ $soldText }} terjual
+                        </span>
+                    </div>
+                </div>
+            @empty
+                <p style="text-align: center; grid-column: 1/-1; padding: 40px; color: #999;">Tidak ada produk ditemukan</p>
+            @endforelse
         </div>
-    </div>
-@endsection
 
-@section('extra-scripts')
-<script>
-    async function loadCategories() {
-        try {
-            const response = await fetch('/products/categories', {
-                headers: {'Accept': 'application/json'}
-            });
-            const result = await response.json();
-            
-            if (result.success) {
-                const select = document.getElementById('categoryFilter');
-                result.data.forEach(cat => {
-                    const option = document.createElement('option');
-                    option.value = cat.id;
-                    option.textContent = cat.name;
-                    select.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-    
-    async function loadProducts() {
-        const search = document.getElementById('searchInput').value;
-        const category = document.getElementById('categoryFilter').value;
-        const province = document.getElementById('provinceFilter').value;
-        
-        let url = '/products?';
-        if (search) url += `search=${encodeURIComponent(search)}&`;
-        if (category) url += `category_id=${category}&`;
-        if (province) url += `province=${encodeURIComponent(province)}&`;
-        
-        try {
-            const response = await fetch(url, {
-                headers: {'Accept': 'application/json'}
-            });
-            const result = await response.json();
-            
-            if (result.success) {
-                displayProducts(result.data.data);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-    
-    function displayProducts(products) {
-        const gridHTML = products.map(product => `
-            <div style="background: white; border: 1px solid #eee; border-radius: 10px; padding: 20px; cursor: pointer;" onclick="window.location.href='/products/${product.id}'">
-                <div style="height: 150px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 5px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
-                    📦
-                </div>
-                <h4 style="margin-bottom: 10px; color: #333; font-size: 16px; height: 40px; overflow: hidden;">${product.name}</h4>
-                <p style="color: #667eea; font-size: 18px; font-weight: bold; margin-bottom: 5px;">Rp ${product.price.toLocaleString('id-ID')}</p>
-                <p style="color: #999; font-size: 13px; margin-bottom: 10px;">${product.seller?.store_name || 'Unknown'}</p>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                    <span style="color: #f39c12;">⭐ ${product.average_rating || 0}</span>
-                    <span style="color: ${product.stock > 10 ? '#27ae60' : product.stock > 0 ? '#f39c12' : '#e74c3c'}; font-size: 12px;">
-                        Stok: ${product.stock}
-                    </span>
-                </div>
+        @if($products->hasPages())
+            <div style="margin-top: 30px; display: flex; justify-content: center; gap: 10px;">
+                @if ($products->onFirstPage())
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 8px; cursor: not-allowed;">‹ Prev</span>
+                @else
+                    <a href="{{ $products->previousPageUrl() }}" style="padding: 10px 15px; background: white; color: #667eea; border: 2px solid #667eea; border-radius: 8px; text-decoration: none; font-weight: 500;">‹ Prev</a>
+                @endif
+
+                @foreach(range(1, $products->lastPage()) as $page)
+                    @if($page == $products->currentPage())
+                        <span style="padding: 10px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; font-weight: 500;">{{ $page }}</span>
+                    @else
+                        <a href="{{ $products->url($page) }}" style="padding: 10px 15px; background: white; color: #667eea; border: 2px solid #e0e0e0; border-radius: 8px; text-decoration: none; font-weight: 500;">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                @if ($products->hasMorePages())
+                    <a href="{{ $products->nextPageUrl() }}" style="padding: 10px 15px; background: white; color: #667eea; border: 2px solid #667eea; border-radius: 8px; text-decoration: none; font-weight: 500;">Next ›</a>
+                @else
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 8px; cursor: not-allowed;">Next ›</span>
+                @endif
             </div>
-        `).join('');
-        
-        document.getElementById('productsGrid').innerHTML = gridHTML || '<p style="text-align: center; grid-column: 1/-1;">Tidak ada produk</p>';
-    }
-    
-    loadCategories();
-    loadProducts();
-</script>
+        @endif
+    </div>
 @endsection

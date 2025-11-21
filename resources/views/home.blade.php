@@ -123,6 +123,14 @@
                 ->groupBy('province')
                 ->orderBy('total', 'desc')
                 ->get();
+            
+            // Jumlah pengunjung yang memberikan komentar dan rating
+            $totalReviewers = \App\Models\ProductReview::distinct('reviewer_email')->count('reviewer_email');
+            $reviewsByProvince = \App\Models\ProductReview::select('reviewer_province', \DB::raw('COUNT(DISTINCT reviewer_email) as total'))
+                ->groupBy('reviewer_province')
+                ->orderBy('total', 'desc')
+                ->limit(10)
+                ->get();
         @endphp
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
             <div class="card">
@@ -136,9 +144,20 @@
             </div>
         </div>
         
-        <div class="card">
-            <h3 style="margin-bottom: 20px;">Toko per Provinsi</h3>
-            <canvas id="provinceChart" style="max-height: 300px;"></canvas>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">Toko per Provinsi</h3>
+                <canvas id="provinceChart" style="max-height: 300px;"></canvas>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">Pengunjung yang Memberi Review (Top 10 Provinsi)</h3>
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <p style="font-size: 32px; font-weight: bold; color: #667eea; margin: 0;">{{ $totalReviewers }}</p>
+                    <p style="color: #999; margin: 0;">Total Unique Reviewers</p>
+                </div>
+                <canvas id="reviewersChart" style="max-height: 250px;"></canvas>
+            </div>
         </div>
         
         <script>
@@ -227,6 +246,43 @@
                 plugins: {
                     legend: {
                         display: false
+                    }
+                }
+            }
+        });
+        
+        // Reviewers by Province Chart
+        const reviewersCtx = document.getElementById('reviewersChart').getContext('2d');
+        new Chart(reviewersCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {!! json_encode($reviewsByProvince->pluck('reviewer_province')) !!},
+                datasets: [{
+                    data: {!! json_encode($reviewsByProvince->pluck('total')) !!},
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(79, 172, 254, 0.8)',
+                        'rgba(67, 233, 123, 0.8)',
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(231, 76, 60, 0.8)',
+                        'rgba(39, 174, 96, 0.8)',
+                        'rgba(243, 156, 18, 0.8)',
+                        'rgba(155, 89, 182, 0.8)',
+                        'rgba(52, 152, 219, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 10
+                            }
+                        }
                     }
                 }
             }
@@ -368,9 +424,24 @@
                 ->limit(5)
                 ->get();
             
-            $topStores = \App\Models\Seller::withCount('products')
-                ->where('status', 'approved')
-                ->orderBy('products_count', 'desc')
+            // Top Stores berdasarkan sold_count (paling banyak dibeli)
+            $storePeriod = request('store_period', 'all');
+            $topStoresQuery = \App\Models\Seller::select('sellers.id', 'sellers.store_name', \DB::raw('SUM(products.sold_count) as total_sold'))
+                ->join('products', 'sellers.id', '=', 'products.seller_id')
+                ->where('sellers.status', 'approved')
+                ->groupBy('sellers.id', 'sellers.store_name');
+            
+            // Filter berdasarkan periode
+            if ($storePeriod == 'daily') {
+                $topStoresQuery->whereDate('products.created_at', today());
+            } elseif ($storePeriod == 'monthly') {
+                $topStoresQuery->whereMonth('products.created_at', now()->month)
+                    ->whereYear('products.created_at', now()->year);
+            } elseif ($storePeriod == 'yearly') {
+                $topStoresQuery->whereYear('products.created_at', now()->year);
+            }
+            
+            $topStores = $topStoresQuery->orderBy('total_sold', 'desc')
                 ->limit(5)
                 ->get();
         @endphp
@@ -381,7 +452,15 @@
             </div>
             
             <div class="card">
-                <h3 style="margin-bottom: 20px;">Toko Terpopuler</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">Toko Terpopuler</h3>
+                    <select id="storePeriodFilter" onchange="window.location.href='?store_period=' + this.value" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="all" {{ request('store_period', 'all') == 'all' ? 'selected' : '' }}>Semua Waktu</option>
+                        <option value="daily" {{ request('store_period') == 'daily' ? 'selected' : '' }}>Hari Ini</option>
+                        <option value="monthly" {{ request('store_period') == 'monthly' ? 'selected' : '' }}>Bulan Ini</option>
+                        <option value="yearly" {{ request('store_period') == 'yearly' ? 'selected' : '' }}>Tahun Ini</option>
+                    </select>
+                </div>
                 <canvas id="topStoresChart" style="max-height: 250px;"></canvas>
             </div>
         </div>
@@ -424,8 +503,8 @@
             data: {
                 labels: {!! json_encode($topStores->pluck('store_name')) !!},
                 datasets: [{
-                    label: 'Jumlah Produk',
-                    data: {!! json_encode($topStores->pluck('products_count')) !!},
+                    label: 'Total Terjual',
+                    data: {!! json_encode($topStores->pluck('total_sold')) !!},
                     backgroundColor: 'rgba(155, 89, 182, 0.7)',
                     borderColor: 'rgba(155, 89, 182, 1)',
                     borderWidth: 2
@@ -437,13 +516,13 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 1
+                            stepSize: 100
                         }
                     }
                 },
                 plugins: {
                     legend: {
-                        display: false
+                        display: true
                     }
                 }
             }

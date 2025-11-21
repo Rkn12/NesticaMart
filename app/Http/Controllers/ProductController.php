@@ -127,11 +127,9 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate($request->get('per_page', 20));
+        $categories = ProductCategory::orderBy('name')->get();
 
-        return response()->json([
-            'success' => true,
-            'data' => $products
-        ]);
+        return view('products.index', compact('products', 'categories'));
     }
 
     /**
@@ -148,10 +146,16 @@ class ProductController extends Controller
             }
         ])->findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'data' => $product
-        ]);
+        return view('products.show', compact('product'));
+    }
+
+    /**
+     * Halaman form review produk
+     */
+    public function reviewForm($id)
+    {
+        $product = Product::with('seller')->findOrFail($id);
+        return view('products.review', compact('product'));
     }
 
     /**

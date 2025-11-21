@@ -7,59 +7,21 @@
     <div class="card">
         <div class="card-header">
             <h3>Daftar Penjual</h3>
-            <a href="#" class="btn btn-primary" onclick="alert('Fitur tambah penjual via API')">+ Tambah Penjual</a>
         </div>
         
-        <div class="search-bar">
-            <input type="text" id="searchInput" class="form-control" placeholder="Cari nama toko, pemilik, atau email...">
-            <select id="statusFilter" class="form-control" style="max-width: 200px;">
+        <form method="GET" action="{{ route('sellers.index') }}" class="search-bar">
+            <input type="text" name="search" class="form-control" placeholder="Cari nama toko, pemilik, atau email..." value="{{ request('search') }}">
+            <select name="status" class="form-control" style="max-width: 200px;">
                 <option value="">Semua Status</option>
-                <option value="approved">Approved</option>
-                <option value="pending">Pending</option>
-                <option value="rejected">Rejected</option>
+                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
             </select>
-            <button class="btn btn-primary" onclick="loadSellers()">Cari</button>
-        </div>
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </form>
         
-        <div id="sellersTable">
-            <div style="text-align: center; padding: 40px;">
-                <p>Loading...</p>
-            </div>
-        </div>
-    </div>
-@endsection
-
-@section('extra-scripts')
-<script>
-    async function loadSellers() {
-        const search = document.getElementById('searchInput').value;
-        const status = document.getElementById('statusFilter').value;
-        
-        let url = '/sellers';
-        const params = new URLSearchParams();
-        if (search) params.append('search', search);
-        if (status) params.append('status', status);
-        if (params.toString()) url += '?' + params.toString();
-        
-        try {
-            const response = await fetch(url, {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            const result = await response.json();
-            
-            if (result.success) {
-                displaySellers(result.data.data);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-    
-    function displaySellers(sellers) {
-        const tableHTML = `
-            <table>
+        <div style="overflow-x: auto;">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -68,72 +30,65 @@
                         <th>Email</th>
                         <th>Lokasi</th>
                         <th>Status</th>
+                        <th>Tanggal Daftar</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${sellers.map(seller => `
+                    @forelse($sellers as $seller)
                         <tr>
-                            <td>${seller.id}</td>
-                            <td>${seller.store_name}</td>
-                            <td>${seller.owner_name}</td>
-                            <td>${seller.email}</td>
-                            <td>${seller.city}, ${seller.province}</td>
+                            <td>{{ $seller->id }}</td>
+                            <td><strong>{{ $seller->store_name }}</strong></td>
+                            <td>{{ $seller->owner_name }}</td>
+                            <td>{{ $seller->email }}</td>
+                            <td>{{ $seller->city }}, {{ $seller->province }}</td>
                             <td>
-                                <span class="badge badge-${seller.status === 'approved' ? 'success' : seller.status === 'pending' ? 'warning' : 'danger'}">
-                                    ${seller.status}
-                                </span>
+                                @if($seller->status == 'approved')
+                                    <span class="badge badge-success">Approved</span>
+                                @elseif($seller->status == 'pending')
+                                    <span class="badge badge-warning">Pending</span>
+                                @else
+                                    <span class="badge badge-danger">Rejected</span>
+                                @endif
                             </td>
+                            <td>{{ $seller->created_at->format('d M Y') }}</td>
                             <td>
-                                <a href="/sellers/${seller.id}" class="btn btn-sm btn-primary">Detail</a>
-                                ${seller.status === 'pending' ? `
-                                    <button class="btn btn-sm btn-success" onclick="verifySeller(${seller.id}, 'approved')">Approve</button>
-                                    <button class="btn btn-sm btn-danger" onclick="verifySeller(${seller.id}, 'rejected')">Reject</button>
-                                ` : ''}
+                                <a href="{{ route('sellers.show', $seller->id) }}" class="btn btn-sm btn-primary">Detail</a>
                             </td>
                         </tr>
-                    `).join('')}
+                    @empty
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #999;">
+                                Tidak ada data penjual
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
-        `;
+        </div>
         
-        document.getElementById('sellersTable').innerHTML = tableHTML;
-    }
-    
-    async function verifySeller(id, status) {
-        const note = prompt(`Catatan verifikasi (${status}):`);
-        if (note === null) return;
-        
-        try {
-            const response = await fetch(`/sellers/${id}/verify`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    status: status,
-                    verification_note: note,
-                    verified_by: '{{ Auth::user()->name }}'
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                alert('Verifikasi berhasil!');
-                loadSellers();
-            } else {
-                alert('Gagal melakukan verifikasi');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan');
-        }
-    }
-    
-    // Load sellers on page load
-    loadSellers();
-</script>
+        @if($sellers->hasPages())
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+                @if ($sellers->onFirstPage())
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 8px; cursor: not-allowed;">‹ Prev</span>
+                @else
+                    <a href="{{ $sellers->previousPageUrl() }}" style="padding: 10px 15px; background: white; color: #667eea; border: 2px solid #667eea; border-radius: 8px; text-decoration: none; font-weight: 500;">‹ Prev</a>
+                @endif
+
+                @foreach(range(1, $sellers->lastPage()) as $page)
+                    @if($page == $sellers->currentPage())
+                        <span style="padding: 10px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; font-weight: 500;">{{ $page }}</span>
+                    @else
+                        <a href="{{ $sellers->url($page) }}" style="padding: 10px 15px; background: white; color: #667eea; border: 2px solid #e0e0e0; border-radius: 8px; text-decoration: none; font-weight: 500;">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                @if ($sellers->hasMorePages())
+                    <a href="{{ $sellers->nextPageUrl() }}" style="padding: 10px 15px; background: white; color: #667eea; border: 2px solid #667eea; border-radius: 8px; text-decoration: none; font-weight: 500;">Next ›</a>
+                @else
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 8px; cursor: not-allowed;">Next ›</span>
+                @endif
+            </div>
+        @endif
+    </div>
 @endsection

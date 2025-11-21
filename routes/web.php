@@ -31,11 +31,30 @@ Route::middleware('auth')->group(function () {
     
     // Platform Admin Only Routes
     Route::middleware('role:platform')->group(function () {
-        Route::get('/sellers', function () {
-            return view('sellers.index');
+        Route::get('/sellers', function (\Illuminate\Http\Request $request) {
+            $query = \App\Models\Seller::query();
+            
+            if ($request->has('search')) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('store_name', 'like', "%{$search}%")
+                      ->orWhere('owner_name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+            
+            if ($request->has('status')) {
+                $query->where('status', $request->status);
+            }
+            
+            $sellers = $query->orderBy('created_at', 'desc')->paginate(10);
+            
+            return view('sellers.index', compact('sellers'));
         })->name('sellers.index');
+        
         Route::get('/sellers/{id}', function ($id) {
-            return view('sellers.show', ['id' => $id]);
+            $seller = \App\Models\Seller::with(['products.category'])->findOrFail($id);
+            return view('sellers.show', compact('seller'));
         })->name('sellers.show');
         
         Route::get('/dashboard/platform', function () {
@@ -67,30 +86,20 @@ Route::middleware('auth')->group(function () {
         return view('sellers.create');
     })->name('sellers.create');
     
-    Route::get('/products', function () {
-        return view('products.index');
-    })->name('products.index');
-    
-    Route::get('/products/{id}', function ($id) {
-        return view('products.show', ['id' => $id]);
-    })->name('products.show');
-    
-    Route::get('/reviews', function () {
-        return view('reviews.index');
-    });
+    Route::get('/reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
 });
 
 // ========================================
-// SELLER ROUTES (SRS-01, SRS-02)
+// SELLER API ROUTES (SRS-01, SRS-02)
 // ========================================
-Route::prefix('sellers')->group(function () {
+Route::prefix('api/sellers')->group(function () {
     // Registrasi penjual
     Route::post('/register', [SellerController::class, 'register']);
     
-    // Get daftar penjual (admin)
+    // Get daftar penjual (admin) - API
     Route::get('/', [SellerController::class, 'index']);
     
-    // Get detail penjual
+    // Get detail penjual - API
     Route::get('/{id}', [SellerController::class, 'show']);
     
     // Update data penjual
@@ -105,13 +114,16 @@ Route::prefix('sellers')->group(function () {
 // ========================================
 Route::prefix('products')->group(function () {
     // Get katalog produk dengan pencarian
-    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/', [ProductController::class, 'index'])->name('products.index');
     
     // Get kategori produk
     Route::get('/categories', [ProductController::class, 'getCategories']);
     
     // Get detail produk
-    Route::get('/{id}', [ProductController::class, 'show']);
+    Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
+    
+    // Halaman tulis review
+    Route::get('/{id}/review', [ProductController::class, 'reviewForm'])->name('products.review');
     
     // Upload/create produk (penjual)
     Route::post('/', [ProductController::class, 'store']);

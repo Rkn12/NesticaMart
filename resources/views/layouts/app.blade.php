@@ -306,26 +306,82 @@
             flex: 1;
         }
         
+        /* Pagination Styling */
+        nav[role="navigation"] {
+            margin-top: 30px;
+        }
+        
+        nav[role="navigation"] div:first-child {
+            display: none; /* Hide "Showing X to Y of Z results" */
+        }
+        
         .pagination {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             justify-content: center;
-            margin-top: 20px;
+            align-items: center;
+            flex-wrap: wrap;
         }
         
         .pagination a,
         .pagination span {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             text-decoration: none;
             color: #667eea;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
         }
         
-        .pagination span {
+        .pagination a:hover {
             background: #667eea;
             color: white;
             border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .pagination span[aria-current="page"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .pagination span[aria-disabled="true"] {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+            color: #999;
+        }
+        
+        .pagination svg {
+            display: none !important; /* Hide arrow icons */
+            width: 0 !important;
+            height: 0 !important;
+            visibility: hidden !important;
+        }
+        
+        .pagination a[rel="prev"],
+        .pagination a[rel="next"] {
+            font-size: 0; /* Hide any text inside */
+        }
+        
+        .pagination a[rel="prev"]::before {
+            content: "‹ Prev";
+            font-size: 14px;
+        }
+        
+        .pagination a[rel="next"]::before {
+            content: "Next ›";
+            font-size: 14px;
         }
     </style>
     @yield('extra-styles')
@@ -335,9 +391,9 @@
         <div class="sidebar-header">
             <h1>🛍️ Marketplace</h1>
             <p>
-                @if(Auth::user()->isPlatform())
+                @if(Auth::check() && Auth::user()->isPlatform())
                     Platform Admin
-                @elseif(Auth::user()->isPenjual())
+                @elseif(Auth::check() && Auth::user()->isPenjual())
                     Dashboard Penjual
                 @else
                     Pengunjung
@@ -349,7 +405,7 @@
                 <i>📊</i> Dashboard
             </a>
             
-            @if(Auth::user()->isPlatform())
+            @if(Auth::check() && Auth::user()->isPlatform())
                 <!-- Menu untuk Platform Admin -->
                 <a href="/sellers" class="menu-item {{ Request::is('sellers*') ? 'active' : '' }}">
                     <i>👥</i> Kelola Penjual
@@ -362,7 +418,7 @@
                 </a>
             @endif
             
-            @if(Auth::user()->isPenjual())
+            @if(Auth::check() && Auth::user()->isPenjual())
                 <!-- Menu untuk Penjual -->
                 <a href="/products/create" class="menu-item {{ Request::is('products/create') ? 'active' : '' }}">
                     <i>➕</i> Upload Produk
@@ -378,7 +434,7 @@
                 </a>
             @endif
             
-            @if(Auth::user()->isPengunjung() || Auth::user()->isPenjual())
+            @if(!Auth::check() || Auth::user()->isPengunjung() || Auth::user()->isPenjual())
                 <!-- Menu untuk Pengunjung & Penjual (bisa browse) -->
                 <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
                     <i>🛍️</i> Katalog Produk
@@ -396,13 +452,17 @@
                 <h2>@yield('page-title', 'Dashboard')</h2>
             </div>
             <div class="navbar-right">
-                <div class="user-info">
-                    <span>{{ Auth::user()->name }}</span>
-                </div>
-                <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="btn-logout">Logout</button>
-                </form>
+                @if(Auth::check())
+                    <div class="user-info">
+                        <span>{{ Auth::user()->name }}</span>
+                    </div>
+                    <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                @else
+                    <a href="/login" class="btn-logout" style="text-decoration: none;">Login</a>
+                @endif
             </div>
         </nav>
         

@@ -14,8 +14,15 @@ class ProductReview extends Model
         'reviewer_name',
         'reviewer_phone',
         'reviewer_email',
+        'reviewer_province',
         'rating',
         'comment',
+        'photos',
+        'video',
+    ];
+
+    protected $casts = [
+        'photos' => 'array', // Cast JSON to array
     ];
 
     /**

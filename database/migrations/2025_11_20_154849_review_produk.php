@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('reviewer_name', 150);
             $table->string('reviewer_phone', 20);
             $table->string('reviewer_email', 150);
+            $table->string('reviewer_province', 100);
 
             $table->tinyInteger('rating'); // 1–5
             $table->text('comment')->nullable();
