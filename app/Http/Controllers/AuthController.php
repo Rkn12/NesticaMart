@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Seller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -98,7 +99,7 @@ class AuthController extends Controller
 
         // Create seller record with status pending
         // PIC = Pemilik (data sama)
-        $seller = \App\Models\Seller::create([
+        $seller = Seller::create([
             'store_name' => $request->store_name,
             'store_description' => $request->store_description,
             'owner_name' => $request->owner_name,
@@ -120,7 +121,7 @@ class AuthController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect('/login')->with('success', 'Registrasi berhasil! Akun Anda akan diverifikasi oleh admin. Silakan tunggu email konfirmasi.');
+        return view('auth.registration-success');
     }
 
     /**

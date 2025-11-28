@@ -198,6 +198,26 @@
             font-size: 12px;
         }
         
+        .error-message {
+            display: block;
+            margin-top: 5px;
+            color: #e74c3c;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+        
+        .form-group input.valid,
+        .form-group textarea.valid {
+            border-color: #27ae60;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+        }
+        
         .alert {
             padding: 15px 20px;
             border-radius: 8px;
@@ -319,6 +339,7 @@
                         <div class="form-group">
                             <label for="store_name">Nama Toko <span class="required">*</span></label>
                             <input type="text" id="store_name" name="store_name" value="{{ old('store_name') }}" placeholder="Masukkan nama toko Anda" required>
+                            <div class="error-message" id="store_name_error" style="display: none;"></div>
                         </div>
                     </div>
                     
@@ -326,6 +347,7 @@
                         <div class="form-group">
                             <label for="store_description">Deskripsi Singkat <span class="required">*</span></label>
                             <textarea id="store_description" name="store_description" placeholder="Deskripsikan toko Anda" required>{{ old('store_description') }}</textarea>
+                            <div class="error-message" id="store_description_error" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -338,11 +360,13 @@
                         <div class="form-group">
                             <label for="owner_name">Nama PIC <span class="required">*</span></label>
                             <input type="text" id="owner_name" name="owner_name" value="{{ old('owner_name') }}" placeholder="Masukkan nama pemilik" required>
+                            <div class="error-message" id="owner_name_error" style="display: none;"></div>
                         </div>
                         
                         <div class="form-group">
                             <label for="nik">No. KTP <span class="required">*</span></label>
                             <input type="text" id="nik" name="nik" value="{{ old('nik') }}" placeholder="16 digit NIK" maxlength="16" required>
+                            <div class="error-message" id="nik_error" style="display: none;"></div>
                         </div>
                     </div>
                     
@@ -350,11 +374,13 @@
                         <div class="form-group">
                             <label for="phone">No. Handphone <span class="required">*</span></label>
                             <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" placeholder="081234567890" required>
+                            <div class="error-message" id="phone_error" style="display: none;"></div>
                         </div>
                         
                         <div class="form-group">
                             <label for="email">Email <span class="required">*</span></label>
                             <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="email@example.com" required>
+                            <div class="error-message" id="email_error" style="display: none;"></div>
                         </div>
                     </div>
                     
@@ -363,12 +389,14 @@
                             <label for="foto_ktp_pic">Foto PIC <span class="required">*</span></label>
                             <input type="file" id="foto_ktp_pic" name="foto_ktp_pic" accept="image/*" required>
                             <small>Format: JPG, PNG, max 2MB</small>
+                            <div class="error-message" id="foto_ktp_pic_error" style="display: none;"></div>
                         </div>
                         
                         <div class="form-group">
                             <label for="file_ktp_pic">File Upload KTP <span class="required">*</span></label>
                             <input type="file" id="file_ktp_pic" name="file_ktp_pic" accept="image/*,application/pdf" required>
                             <small>Format: JPG, PNG, PDF, max 2MB</small>
+                            <div class="error-message" id="file_ktp_pic_error" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -381,6 +409,7 @@
                         <div class="form-group">
                             <label for="address">Alamat <span class="required">*</span></label>
                             <textarea id="address" name="address" placeholder="Masukkan alamat lengkap" required>{{ old('address') }}</textarea>
+                            <div class="error-message" id="address_error" style="display: none;"></div>
                         </div>
                     </div>
                     
@@ -388,11 +417,13 @@
                         <div class="form-group">
                             <label for="rt">RT <span class="required">*</span></label>
                             <input type="text" id="rt" name="rt" value="{{ old('rt') }}" placeholder="001" maxlength="3" required>
+                            <div class="error-message" id="rt_error" style="display: none;"></div>
                         </div>
                         
                         <div class="form-group">
                             <label for="rw">RW <span class="required">*</span></label>
                             <input type="text" id="rw" name="rw" value="{{ old('rw') }}" placeholder="005" maxlength="3" required>
+                            <div class="error-message" id="rw_error" style="display: none;"></div>
                         </div>
                     </div>
                     
@@ -400,11 +431,13 @@
                         <div class="form-group">
                             <label for="kelurahan">Kelurahan <span class="required">*</span></label>
                             <input type="text" id="kelurahan" name="kelurahan" value="{{ old('kelurahan') }}" placeholder="Masukkan kelurahan" required>
+                            <div class="error-message" id="kelurahan_error" style="display: none;"></div>
                         </div>
                         
                         <div class="form-group">
                             <label for="subdistrict">Kecamatan <span class="required">*</span></label>
                             <input type="text" id="subdistrict" name="subdistrict" value="{{ old('subdistrict') }}" placeholder="Masukkan kecamatan" required>
+                            <div class="error-message" id="subdistrict_error" style="display: none;"></div>
                         </div>
                     </div>
                     
@@ -412,11 +445,13 @@
                         <div class="form-group">
                             <label for="city">Kabupaten/Kota <span class="required">*</span></label>
                             <input type="text" id="city" name="city" value="{{ old('city') }}" placeholder="Masukkan kabupaten/kota" required>
+                            <div class="error-message" id="city_error" style="display: none;"></div>
                         </div>
                         
                         <div class="form-group">
                             <label for="province">Provinsi <span class="required">*</span></label>
                             <input type="text" id="province" name="province" value="{{ old('province') }}" placeholder="Masukkan provinsi" required>
+                            <div class="error-message" id="province_error" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -492,28 +527,47 @@
             const inputs = currentSection.querySelectorAll('input[required], textarea[required], select[required]');
             let isValid = true;
             
+            // Clear all previous error messages and styles
             inputs.forEach(input => {
-                // Remove previous error styling
+                const errorElement = document.getElementById(input.id + '_error');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                    errorElement.textContent = '';
+                }
+                input.classList.remove('error', 'valid');
                 input.style.borderColor = '';
+            });
+            
+            inputs.forEach(input => {
+                const errorElement = document.getElementById(input.id + '_error');
+                let errorMessage = '';
                 
                 if (!input.value.trim()) {
-                    input.style.borderColor = '#e74c3c';
+                    errorMessage = `${input.previousElementSibling.textContent.replace(' *', '')} wajib diisi`;
                     isValid = false;
                 } else if (input.type === 'email' && !input.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                    input.style.borderColor = '#e74c3c';
+                    errorMessage = 'Format email tidak valid';
                     isValid = false;
                 } else if (input.type === 'tel' && !input.value.match(/^[0-9]{10,15}$/)) {
-                    input.style.borderColor = '#e74c3c';
+                    errorMessage = 'Nomor handphone harus 10-15 digit angka';
                     isValid = false;
                 } else if (input.name === 'nik' && input.value.length !== 16) {
-                    input.style.borderColor = '#e74c3c';
+                    errorMessage = 'NIK harus 16 digit angka';
                     isValid = false;
                 } else if ((input.name === 'rt' || input.name === 'rw') && input.value.length !== 3) {
-                    input.style.borderColor = '#e74c3c';
+                    errorMessage = `${input.name.toUpperCase()} harus 3 digit angka`;
                     isValid = false;
                 } else if (input.type === 'file' && !input.files.length) {
-                    input.style.borderColor = '#e74c3c';
+                    errorMessage = 'File wajib diunggah';
                     isValid = false;
+                }
+                
+                if (errorMessage && errorElement) {
+                    input.classList.add('error');
+                    errorElement.textContent = errorMessage;
+                    errorElement.style.display = 'block';
+                } else if (input.value.trim()) {
+                    input.classList.add('valid');
                 }
             });
             
@@ -526,9 +580,8 @@
                     currentStep++;
                     showStep(currentStep);
                 }
-            } else {
-                alert('Mohon lengkapi semua field yang wajib diisi dengan format yang benar!');
             }
+            // Removed the alert, errors will show inline
         });
         
         prevBtn.addEventListener('click', () => {
@@ -541,10 +594,21 @@
         // Real-time validation feedback
         document.addEventListener('input', (e) => {
             if (e.target.matches('input[required], textarea[required]')) {
+                const errorElement = document.getElementById(e.target.id + '_error');
+                
                 if (e.target.value.trim()) {
-                    e.target.style.borderColor = '#27ae60';
+                    e.target.classList.remove('error');
+                    e.target.classList.add('valid');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
                 } else {
-                    e.target.style.borderColor = '#e74c3c';
+                    e.target.classList.remove('valid');
+                    e.target.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = `${e.target.previousElementSibling.textContent.replace(' *', '')} wajib diisi`;
+                        errorElement.style.display = 'block';
+                    }
                 }
             }
         });
@@ -552,10 +616,21 @@
         // Validate email format real-time
         document.addEventListener('input', (e) => {
             if (e.target.type === 'email') {
+                const errorElement = document.getElementById(e.target.id + '_error');
+                
                 if (e.target.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                    e.target.style.borderColor = '#27ae60';
+                    e.target.classList.remove('error');
+                    e.target.classList.add('valid');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
                 } else if (e.target.value.trim()) {
-                    e.target.style.borderColor = '#e74c3c';
+                    e.target.classList.remove('valid');
+                    e.target.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = 'Format email tidak valid';
+                        errorElement.style.display = 'block';
+                    }
                 }
             }
         });
@@ -563,12 +638,24 @@
         // Validate phone number real-time
         document.addEventListener('input', (e) => {
             if (e.target.type === 'tel') {
+                const errorElement = document.getElementById(e.target.id + '_error');
+                
                 // Only allow numbers
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                
                 if (e.target.value.match(/^[0-9]{10,15}$/)) {
-                    e.target.style.borderColor = '#27ae60';
+                    e.target.classList.remove('error');
+                    e.target.classList.add('valid');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
                 } else if (e.target.value.trim()) {
-                    e.target.style.borderColor = '#e74c3c';
+                    e.target.classList.remove('valid');
+                    e.target.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = 'Nomor handphone harus 10-15 digit angka';
+                        errorElement.style.display = 'block';
+                    }
                 }
             }
         });
@@ -576,12 +663,24 @@
         // Validate NIK real-time
         document.addEventListener('input', (e) => {
             if (e.target.name === 'nik') {
+                const errorElement = document.getElementById(e.target.id + '_error');
+                
                 // Only allow numbers, max 16 digits
                 e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 16);
+                
                 if (e.target.value.length === 16) {
-                    e.target.style.borderColor = '#27ae60';
+                    e.target.classList.remove('error');
+                    e.target.classList.add('valid');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
                 } else if (e.target.value.trim()) {
-                    e.target.style.borderColor = '#e74c3c';
+                    e.target.classList.remove('valid');
+                    e.target.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = 'NIK harus 16 digit angka';
+                        errorElement.style.display = 'block';
+                    }
                 }
             }
         });
@@ -589,12 +688,46 @@
         // Validate RT/RW real-time (3 digits only)
         document.addEventListener('input', (e) => {
             if (e.target.name === 'rt' || e.target.name === 'rw') {
+                const errorElement = document.getElementById(e.target.id + '_error');
+                
                 // Only allow numbers, max 3 digits
                 e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 3);
+                
                 if (e.target.value.length === 3) {
-                    e.target.style.borderColor = '#27ae60';
+                    e.target.classList.remove('error');
+                    e.target.classList.add('valid');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
                 } else if (e.target.value.trim()) {
-                    e.target.style.borderColor = '#e74c3c';
+                    e.target.classList.remove('valid');
+                    e.target.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = `${e.target.name.toUpperCase()} harus 3 digit angka`;
+                        errorElement.style.display = 'block';
+                    }
+                }
+            }
+        });
+        
+        // Validate file input real-time
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'file') {
+                const errorElement = document.getElementById(e.target.id + '_error');
+                
+                if (e.target.files.length > 0) {
+                    e.target.classList.remove('error');
+                    e.target.classList.add('valid');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
+                } else {
+                    e.target.classList.remove('valid');
+                    e.target.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = 'File wajib diunggah';
+                        errorElement.style.display = 'block';
+                    }
                 }
             }
         });

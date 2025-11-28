@@ -155,10 +155,13 @@ class SellerController extends Controller
                 ]
             );
 
-            (new SellerNotificationController())->sendVerificationResult($seller, 'approved', $plainPassword);
+            // Send approval notification dengan credentials
+            $credentials = "Email: {$seller->email}\nPassword: {$plainPassword}";
+            (new SellerNotificationController())->sendApprovalNotification($seller, $credentials);
         } else {
-            // Kirim email penolakan
-            (new SellerNotificationController())->sendVerificationResult($seller, 'rejected');
+            // Send rejection notification dengan alasan penolakan
+            $rejectionReason = $request->verification_note ?: 'Dokumen tidak memenuhi persyaratan.';
+            (new SellerNotificationController())->sendRejectionNotification($seller, $rejectionReason);
 
             // Hapus file yang diupload (jika ada) dan hapus record penjual supaya bisa daftar ulang
             try {
