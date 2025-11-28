@@ -40,6 +40,13 @@ class ProductReviewController extends Controller
         ]);
 
         if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -71,6 +78,17 @@ class ProductReviewController extends Controller
         // SRS-MartPlace-06: Kirim notifikasi email ke penjual
         $this->sendReviewNotificationEmail($product, $review);
 
+        // Kirim konfirmasi/ucapan terima kasih ke reviewer (email yang diisi saat review)
+        $this->sendReviewerConfirmationEmail($product, $review);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Review berhasil ditambahkan. Terima kasih atas feedback Anda!',
+                'data' => $review
+            ]);
+        }
+
         return redirect()->route('products.show', $product->id)
             ->with('success', 'Review berhasil ditambahkan. Terima kasih atas feedback Anda!');
     }
@@ -97,6 +115,27 @@ class ProductReviewController extends Controller
 
         Mail::raw($message, function ($mail) use ($seller, $subject) {
             $mail->to($seller->email)
+                ->subject($subject);
+        });
+    }
+
+    /**
+     * Kirim email konfirmasi/terima kasih ke reviewer (email yang dimasukkan saat review)
+     */
+    private function sendReviewerConfirmationEmail($product, $review)
+    {
+        $subject = "Terima kasih atas review Anda untuk {$product->name}";
+
+        $message = "Halo {$review->reviewer_name},\n\nTerima kasih telah memberikan rating untuk produk '{$product->name}'.\n\nRating yang Anda berikan: {$review->rating}/5\n";
+
+        if ($review->comment) {
+            $message .= "Komentar Anda: {$review->comment}\n\n";
+        }
+
+        $message .= "Anda dapat melihat produk di: " . url("/products/{$product->id}") . "\n\nTerima kasih,\nTim Marketplace";
+
+        Mail::raw($message, function ($mail) use ($review, $subject) {
+            $mail->to($review->reviewer_email)
                 ->subject($subject);
         });
     }

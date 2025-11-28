@@ -38,7 +38,7 @@
             </div>
         @endif
         
-        <form method="POST" action="/reviews" enctype="multipart/form-data">
+        <form id="review-form" method="POST" action="/reviews" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             
@@ -107,6 +107,73 @@
 @endsection
 
 @section('extra-scripts')
+<script>
+    function showToast(message, success = true) {
+        let toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.right = '20px';
+        toast.style.top = '20px';
+        toast.style.padding = '12px 18px';
+        toast.style.background = success ? '#27ae60' : '#e74c3c';
+        toast.style.color = 'white';
+        toast.style.borderRadius = '8px';
+        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        toast.style.zIndex = 9999;
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=>toast.remove(), 300); }, 3000);
+    }
+
+    // Intercept form submit and send via fetch (to show toast)
+    (function(){
+        const form = document.getElementById('review-form');
+        if (!form) return;
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const formData = new FormData(form);
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Mengirim...';
+
+                const res = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    showToast(data.message || 'Terima kasih! Review berhasil dikirim.');
+                    // redirect to product page after short delay
+                    setTimeout(() => { window.location.href = '/products/{{ $product->id }}'; }, 900);
+                } else {
+                    // show first validation error if available
+                    let msg = 'Terjadi kesalahan saat mengirim review.';
+                    if (data && data.errors) {
+                        const first = Object.values(data.errors)[0];
+                        if (Array.isArray(first)) msg = first[0];
+                        else msg = first;
+                    } else if (data && data.message) {
+                        msg = data.message;
+                    }
+                    showToast(msg, false);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Gagal menghubungi server', false);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = '✉️ Kirim Review';
+            }
+        });
+    })();
+</script>
 <script>
     // Preview foto
     document.getElementById('photoInput').addEventListener('change', function(e) {

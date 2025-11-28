@@ -11,10 +11,9 @@ class VerificationLog extends Model
 
     protected $fillable = [
         'seller_id',
-        'old_status',
-        'new_status',
-        'notes',
         'verified_by',
+        'status',
+        'note',
     ];
 
     // Relasi ke seller

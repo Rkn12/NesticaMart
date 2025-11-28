@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Seller;
 use App\Models\VerificationLog;
+use App\Models\User;
+use App\Http\Controllers\SellerNotificationController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class SellerController extends Controller
@@ -77,6 +81,9 @@ class SellerController extends Controller
             'status' => 'pending',
         ]);
 
+        // Kirim email konfirmasi pendaftaran ke penjual (delegasi ke controller email)
+        (new SellerNotificationController())->sendRegistrationConfirmation($seller);
+
         return response()->json([
             'success' => true,
             'message' => 'Registrasi berhasil. Menunggu verifikasi admin.',
@@ -92,7 +99,8 @@ class SellerController extends Controller
         $validator = Validator::make($request->all(), [
             'status' => 'required|in:approved,rejected',
             'verification_note' => 'nullable|string',
-            'verified_by' => 'required|string|max:150', // admin name/email
+            // make verified_by optional; will default to authenticated user or 'system'
+            'verified_by' => 'nullable|string|max:150', // admin name/email
         ]);
 
         if ($validator->fails()) {
@@ -111,17 +119,62 @@ class SellerController extends Controller
             'verification_note' => $request->verification_note,
         ]);
 
-        // Simpan log verifikasi
+        // Tentukan siapa yang memverifikasi
+        $verifiedBy = $request->filled('verified_by')
+            ? $request->verified_by
+            : (
+                Auth::check()
+                    ? (Auth::user()->name ?? Auth::user()->email)
+                    : 'system'
+            );
+
+        // Simpan log verifikasi (sesuaikan dengan kolom migration)
+        $note = "Dari: {$oldStatus}. ";
+        if ($request->filled('verification_note')) {
+            $note .= "Catatan: {$request->verification_note}";
+        }
+
         VerificationLog::create([
             'seller_id' => $seller->id,
-            'old_status' => $oldStatus,
-            'new_status' => $request->status,
-            'notes' => $request->verification_note,
-            'verified_by' => $request->verified_by,
+            'verified_by' => $verifiedBy,
+            'status' => $request->status,
+            'note' => $note,
         ]);
 
-        // SRS-MartPlace-02: Kirim email notifikasi
-        $this->sendVerificationEmail($seller, $request->status);
+        // Jika approved, buat/ubah akun user untuk seller dan kirim email melalui controller khusus
+        if ($request->status === 'approved') {
+            $plainPassword = 'password123';
+
+            $user = User::updateOrCreate(
+                ['email' => $seller->email],
+                [
+                    'name' => $seller->owner_name ?? $seller->store_name,
+                    'password' => Hash::make($plainPassword),
+                    'role' => 'penjual',
+                    'seller_id' => $seller->id,
+                ]
+            );
+
+            (new SellerNotificationController())->sendVerificationResult($seller, 'approved', $plainPassword);
+        } else {
+            // Kirim email penolakan
+            (new SellerNotificationController())->sendVerificationResult($seller, 'rejected');
+
+            // Hapus file yang diupload (jika ada) dan hapus record penjual supaya bisa daftar ulang
+            try {
+                if ($seller->foto_ktp_pic) {
+                    Storage::disk('public')->delete($seller->foto_ktp_pic);
+                }
+                if ($seller->file_ktp_pic) {
+                    Storage::disk('public')->delete($seller->file_ktp_pic);
+                }
+            } catch (\Exception $e) {
+                // ignore storage deletion errors, continue to delete DB record
+            }
+
+            // Hapus record seller dari database
+            $seller->delete();
+        }
 
         return response()->json([
             'success' => true,
@@ -130,25 +183,7 @@ class SellerController extends Controller
         ]);
     }
 
-    /**
-     * Kirim email notifikasi hasil verifikasi
-     */
-    private function sendVerificationEmail($seller, $status)
-    {
-        $subject = $status === 'approved' 
-            ? 'Selamat! Akun Penjual Anda Telah Disetujui' 
-            : 'Informasi Verifikasi Akun Penjual';
-
-        $message = $status === 'approved'
-            ? "Selamat {$seller->owner_name}, akun penjual Anda telah disetujui. Anda dapat mulai berjualan di marketplace kami."
-            : "Mohon maaf {$seller->owner_name}, akun penjual Anda tidak dapat disetujui. Alasan: {$seller->verification_note}";
-
-        // Implementasi email menggunakan Mail facade
-        Mail::raw($message, function ($mail) use ($seller, $subject) {
-            $mail->to($seller->email)
-                ->subject($subject);
-        });
-    }
+    // Email sending logic moved to SellerNotificationController
 
     /**
      * Get daftar penjual (untuk admin)
