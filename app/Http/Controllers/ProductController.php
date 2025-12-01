@@ -83,32 +83,62 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['seller', 'category', 'reviews']);
+        $query = Product::with(['seller', 'category', 'reviews'])
+            // hanya tampilkan produk dari seller yang sudah approved
+            ->whereHas('seller', function($q) {
+                $q->where('status', 'approved');
+            });
 
-        // SRS-MartPlace-05: Pencarian berdasarkan nama toko
-        if ($request->has('store_name')) {
-            $query->whereHas('seller', function($q) use ($request) {
-                $q->where('store_name', 'like', "%{$request->store_name}%");
+        // SRS-MartPlace-05: Pencarian fleksibel
+        // Jika ada filter nama toko spesifik
+        if ($request->filled('store_name')) {
+            $store = $request->store_name;
+            $query->whereHas('seller', function($q) use ($store) {
+                $q->where('store_name', 'like', "%{$store}%");
             });
         }
 
-        // SRS-MartPlace-05: Pencarian berdasarkan kategori produk
-        if ($request->has('category_id')) {
+        // Filter berdasarkan kategori pilihan
+        if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // SRS-MartPlace-05: Pencarian berdasarkan nama produk
-        if ($request->has('search')) {
-            $query->where('name', 'like', "%{$request->search}%");
+        // Pencarian umum: coba cocokkan dengan nama produk, nama kategori, nama toko, atau lokasi toko
+        if ($request->filled('search')) {
+            $term = $request->search;
+            $query->where(function($q) use ($term) {
+                $q->where('name', 'like', "%{$term}%")
+                  ->orWhereHas('category', function($q2) use ($term) {
+                      $q2->where('name', 'like', "%{$term}%");
+                  })
+                  ->orWhereHas('seller', function($q3) use ($term) {
+                      $q3->where('store_name', 'like', "%{$term}%")
+                         ->orWhere('province', 'like', "%{$term}%")
+                         ->orWhere('city', 'like', "%{$term}%");
+                  });
+            });
         }
 
-        // SRS-MartPlace-05: Pencarian berdasarkan lokasi (kabupaten/kota dan propinsi)
-        if ($request->has('province')) {
-            $query->where('location_province', $request->province);
+        // Pencarian berdasarkan lokasi spesifik (prioritas filter)
+        if ($request->filled('province')) {
+            $province = $request->province;
+            // coba cocokkan produk location atau toko yang berlokasi di province tersebut
+            $query->where(function($q) use ($province) {
+                $q->where('location_province', 'like', "%{$province}%")
+                  ->orWhereHas('seller', function($q2) use ($province) {
+                      $q2->where('province', 'like', "%{$province}%");
+                  });
+            });
         }
 
-        if ($request->has('city')) {
-            $query->where('location_city', 'like', "%{$request->city}%");
+        if ($request->filled('city')) {
+            $city = $request->city;
+            $query->where(function($q) use ($city) {
+                $q->where('location_city', 'like', "%{$city}%")
+                  ->orWhereHas('seller', function($q2) use ($city) {
+                      $q2->where('city', 'like', "%{$city}%");
+                  });
+            });
         }
 
         // Filter by condition
@@ -126,7 +156,7 @@ class ProductController extends Controller
             $query->orderBy('price', $request->sort_by_price === 'asc' ? 'asc' : 'desc');
         }
 
-        $products = $query->paginate($request->get('per_page', 20));
+        $products = $query->paginate($request->get('per_page', 20))->appends($request->except('page'));
         $categories = ProductCategory::orderBy('name')->get();
 
         return view('products.index', compact('products', 'categories'));

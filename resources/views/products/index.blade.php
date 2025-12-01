@@ -5,9 +5,6 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h3>Katalog Produk</h3>
-        </div>
         
         <form method="GET" action="{{ route('products.index') }}" class="search-bar" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px;">
             <input type="text" name="search" class="form-control" placeholder="Cari nama produk..." value="{{ request('search') }}">
@@ -23,9 +20,13 @@
                 @endforeach
             </select>
             
-            <input type="text" name="city" class="form-control" placeholder="Kota/Kabupaten..." value="{{ request('city') }}">
+            <select name="province" id="province" class="form-control select2">
+                <option value="">Semua Provinsi</option>
+            </select>
             
-            <input type="text" name="province" class="form-control" placeholder="Provinsi..." value="{{ request('province') }}">
+            <select name="city" id="city" class="form-control select2" disabled>
+                <option value="">Semua Kota/Kabupaten</option>
+            </select>
             
             <button type="submit" class="btn btn-primary" style="grid-column: span 1;">🔍 Cari</button>
         </form>
@@ -72,4 +73,64 @@
             </div>
         @endif
     </div>
+@endsection
+
+@section('extra-scripts')
+<script>
+$(document).ready(function() {
+    $('.select2').select2();
+
+    var selectedProvince = "{{ request('province') }}";
+    var selectedCity = "{{ request('city') }}";
+
+    // Load Provinces
+    $.get('/api/regions/provinces', function(data) {
+        var provinceSelect = $('#province');
+        $.each(data, function(index, province) {
+            var option = new Option(province.name, province.name);
+            $(option).attr('data-code', province.code);
+            if (province.name === selectedProvince) {
+                $(option).prop('selected', true);
+            }
+            provinceSelect.append(option);
+        });
+        
+        // Trigger change if province is selected to load cities
+        if (selectedProvince) {
+            // We need to wait for options to be appended? No, synchronous enough in loop.
+            // But we need to find the code again because we just appended it.
+            // Actually, we can just trigger change.
+            // But wait, if we trigger change, it will fetch cities.
+            // But we need to pass the code.
+            // The change event handler gets code from :selected.
+            // Since we set selected property, it should work.
+            provinceSelect.trigger('change');
+        }
+    });
+
+    $('#province').on('change', function() {
+        var code = $(this).find(':selected').data('code');
+        // If triggered programmatically, data('code') might not be available if select2 hasn't updated fully?
+        // jQuery data() reads from data- attribute if not set via .data().
+        // So attr('data-code') is safer to set.
+        
+        var citySelect = $('#city');
+        
+        citySelect.empty().append('<option value="">Semua Kota/Kabupaten</option>').prop('disabled', true);
+        
+        if (code) {
+            $.get('/api/regions/regencies/' + code, function(data) {
+                $.each(data, function(index, city) {
+                    var option = new Option(city.name, city.name);
+                    if (city.name === selectedCity) {
+                        $(option).prop('selected', true);
+                    }
+                    citySelect.append(option);
+                });
+                citySelect.prop('disabled', false);
+            });
+        }
+    });
+});
+</script>
 @endsection
