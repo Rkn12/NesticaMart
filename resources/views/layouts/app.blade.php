@@ -433,7 +433,7 @@
             
             @if(Auth::user()->isPenjual())
                 <!-- Menu untuk Penjual -->
-                <a href="/products/create" class="menu-item {{ Request::is('products/create') ? 'active' : '' }}">
+                <a href="{{ route('seller.products.upload.form') }}" class="menu-item {{ Request::is('seller/products/upload') ? 'active' : '' }}">
                     <i>➕</i> Upload Produk
                 </a>
                 <a href="/seller/dashboard" class="menu-item {{ Request::is('seller/dashboard*') ? 'active' : '' }}">

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductUploadController;
 use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SellerController;
@@ -84,10 +85,6 @@ Route::middleware('auth')->group(function () {
     
     // Penjual Only Routes
     Route::middleware('role:penjual')->group(function () {
-        Route::get('/products/create', function () {
-            return view('products.create');
-        })->name('products.create');
-        
         Route::get('/seller/dashboard', function () {
             return view('seller.dashboard');
         })->name('seller.dashboard');
@@ -95,6 +92,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/seller/reports', function () {
             return view('seller.reports');
         })->name('seller.reports');
+        
+        // Product Upload Routes - SRS-MartPlace-03
+        Route::get('/seller/products/upload', [\App\Http\Controllers\ProductUploadController::class, 'showUploadForm'])
+            ->name('seller.products.upload.form');
+        Route::post('/seller/products/upload', [\App\Http\Controllers\ProductUploadController::class, 'uploadProduct'])
+            ->name('seller.products.upload');
+        Route::get('/seller/products', function () {
+            return view('seller.products.index');
+        })->name('seller.products');
     });
     
 });

@@ -2,7 +2,17 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Dashboard Toko Saya</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Dashboard Toko Saya</h2>
+        <div>
+            <a href="{{ route('seller.products.upload.form') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Upload Produk Baru
+            </a>
+            <a href="{{ route('seller.products') }}" class="btn btn-outline-primary">
+                <i class="fas fa-box"></i> Kelola Produk
+            </a>
+        </div>
+    </div>
     
     <!-- Stats Cards -->
     <div class="row mb-4">

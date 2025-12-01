@@ -408,7 +408,7 @@
                 <h3>Quick Actions</h3>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <a href="/products/create" class="btn btn-primary">➕ Upload Produk Baru</a>
+                <a href="{{ route('seller.products.upload.form') }}" class="btn btn-primary">➕ Upload Produk Baru</a>
                 <a href="/products" class="btn btn-primary">📦 Kelola Produk</a>
                 <a href="/seller/dashboard" class="btn btn-primary">📊 Dashboard Lengkap</a>
                 <a href="/seller/reports" class="btn btn-primary">📄 Laporan Toko</a>
