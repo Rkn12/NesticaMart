@@ -54,7 +54,9 @@
             
             <div class="form-group">
                 <label>Provinsi <span style="color: red;">*</span></label>
-                <input type="text" name="reviewer_province" class="form-control" value="{{ old('reviewer_province') }}" required placeholder="Contoh: DKI Jakarta, Jawa Barat, dll">
+                <select name="reviewer_province" id="reviewer_province" class="form-control select2" required>
+                    <option value="">-- Pilih Provinsi --</option>
+                </select>
             </div>
             
             <div class="form-group">
@@ -233,6 +235,19 @@
             };
             reader.readAsDataURL(file);
         }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+
+        // Load Provinces
+        $.get('/api/regions/provinces', function(data) {
+            var provinceSelect = $('#reviewer_province');
+            $.each(data, function(index, province) {
+                provinceSelect.append(new Option(province.name, province.name));
+            });
+        });
     });
 </script>
 @endsection

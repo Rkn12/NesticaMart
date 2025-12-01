@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrasi Penjual - MartPlace</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -11,6 +16,18 @@
             box-sizing: border-box;
         }
         
+        /* Select2 Customization */
+        .select2-container .select2-selection--single {
+            height: 45px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 6px !important;
+            padding: 8px !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 43px !important;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -415,43 +432,55 @@
                     
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="province">Provinsi <span class="required">*</span></label>
+                            <select id="province" name="province" class="select2" style="width: 100%;" required>
+                                <option value="">-- Pilih Provinsi --</option>
+                            </select>
+                            <div class="error-message" id="province_error" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">Kabupaten/Kota <span class="required">*</span></label>
+                            <select id="city" name="city" class="select2" style="width: 100%;" required disabled>
+                                <option value="">-- Pilih Kota/Kabupaten --</option>
+                            </select>
+                            <div class="error-message" id="city_error" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="subdistrict">Kecamatan <span class="required">*</span></label>
+                            <select id="subdistrict" name="subdistrict" class="select2" style="width: 100%;" required disabled>
+                                <option value="">-- Pilih Kecamatan --</option>
+                            </select>
+                            <div class="error-message" id="subdistrict_error" style="display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="kelurahan">Kelurahan <span class="required">*</span></label>
+                            <select id="kelurahan" name="kelurahan" class="select2" style="width: 100%;" required disabled>
+                                <option value="">-- Pilih Kelurahan --</option>
+                            </select>
+                            <div class="error-message" id="kelurahan_error" style="display: none;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
                             <label for="rt">RT <span class="required">*</span></label>
-                            <input type="text" id="rt" name="rt" value="{{ old('rt') }}" placeholder="001" maxlength="3" required>
+                            <select id="rt" name="rt" class="select2" style="width: 100%;" required>
+                                <option value="">-- Pilih RT --</option>
+                            </select>
                             <div class="error-message" id="rt_error" style="display: none;"></div>
                         </div>
                         
                         <div class="form-group">
                             <label for="rw">RW <span class="required">*</span></label>
-                            <input type="text" id="rw" name="rw" value="{{ old('rw') }}" placeholder="005" maxlength="3" required>
+                            <select id="rw" name="rw" class="select2" style="width: 100%;" required>
+                                <option value="">-- Pilih RW --</option>
+                            </select>
                             <div class="error-message" id="rw_error" style="display: none;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="kelurahan">Kelurahan <span class="required">*</span></label>
-                            <input type="text" id="kelurahan" name="kelurahan" value="{{ old('kelurahan') }}" placeholder="Masukkan kelurahan" required>
-                            <div class="error-message" id="kelurahan_error" style="display: none;"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="subdistrict">Kecamatan <span class="required">*</span></label>
-                            <input type="text" id="subdistrict" name="subdistrict" value="{{ old('subdistrict') }}" placeholder="Masukkan kecamatan" required>
-                            <div class="error-message" id="subdistrict_error" style="display: none;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="city">Kabupaten/Kota <span class="required">*</span></label>
-                            <input type="text" id="city" name="city" value="{{ old('city') }}" placeholder="Masukkan kabupaten/kota" required>
-                            <div class="error-message" id="city_error" style="display: none;"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="province">Provinsi <span class="required">*</span></label>
-                            <input type="text" id="province" name="province" value="{{ old('province') }}" placeholder="Masukkan provinsi" required>
-                            <div class="error-message" id="province_error" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -553,9 +582,6 @@
                     isValid = false;
                 } else if (input.name === 'nik' && input.value.length !== 16) {
                     errorMessage = 'NIK harus 16 digit angka';
-                    isValid = false;
-                } else if ((input.name === 'rt' || input.name === 'rw') && input.value.length !== 3) {
-                    errorMessage = `${input.name.toUpperCase()} harus 3 digit angka`;
                     isValid = false;
                 } else if (input.type === 'file' && !input.files.length) {
                     errorMessage = 'File wajib diunggah';
@@ -685,31 +711,7 @@
             }
         });
         
-        // Validate RT/RW real-time (3 digits only)
-        document.addEventListener('input', (e) => {
-            if (e.target.name === 'rt' || e.target.name === 'rw') {
-                const errorElement = document.getElementById(e.target.id + '_error');
-                
-                // Only allow numbers, max 3 digits
-                e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 3);
-                
-                if (e.target.value.length === 3) {
-                    e.target.classList.remove('error');
-                    e.target.classList.add('valid');
-                    if (errorElement) {
-                        errorElement.style.display = 'none';
-                    }
-                } else if (e.target.value.trim()) {
-                    e.target.classList.remove('valid');
-                    e.target.classList.add('error');
-                    if (errorElement) {
-                        errorElement.textContent = `${e.target.name.toUpperCase()} harus 3 digit angka`;
-                        errorElement.style.display = 'block';
-                    }
-                }
-            }
-        });
-        
+
         // Validate file input real-time
         document.addEventListener('change', (e) => {
             if (e.target.type === 'file') {
@@ -734,6 +736,99 @@
         
         // Initialize
         showStep(currentStep);
+
+        // Initialize Select2
+        $(document).ready(function() {
+            $('.select2').select2();
+
+            // Populate RT and RW dropdowns
+            for (let i = 1; i <= 200; i++) {
+                let num = i.toString().padStart(3, '0');
+                $('#rt').append(new Option(num, num));
+                $('#rw').append(new Option(num, num));
+            }
+
+            // Load Provinces
+            $.get('/api/regions/provinces', function(data) {
+                var provinceSelect = $('#province');
+                $.each(data, function(index, province) {
+                    provinceSelect.append($('<option>', {
+                        value: province.name,
+                        text: province.name,
+                        'data-code': province.code
+                    }));
+                });
+            });
+
+            // Handle Province Change
+            $('#province').on('change', function() {
+                var code = $(this).find(':selected').data('code');
+                var citySelect = $('#city');
+                var districtSelect = $('#subdistrict');
+                var villageSelect = $('#kelurahan');
+                
+                citySelect.empty().append('<option value="">-- Pilih Kota/Kabupaten --</option>').prop('disabled', true);
+                districtSelect.empty().append('<option value="">-- Pilih Kecamatan --</option>').prop('disabled', true);
+                villageSelect.empty().append('<option value="">-- Pilih Kelurahan --</option>').prop('disabled', true);
+                
+                if (code) {
+                    $.get('/api/regions/regencies/' + code, function(data) {
+                        $.each(data, function(index, city) {
+                            citySelect.append($('<option>', {
+                                value: city.name,
+                                text: city.name,
+                                'data-code': city.code
+                            }));
+                        });
+                        citySelect.prop('disabled', false);
+                    });
+                }
+            });
+
+            // Handle City Change
+            $('#city').on('change', function() {
+                var code = $(this).find(':selected').data('code');
+                var districtSelect = $('#subdistrict');
+                var villageSelect = $('#kelurahan');
+                
+                districtSelect.empty().append('<option value="">-- Pilih Kecamatan --</option>').prop('disabled', true);
+                villageSelect.empty().append('<option value="">-- Pilih Kelurahan --</option>').prop('disabled', true);
+                
+                if (code) {
+                    $.get('/api/regions/districts/' + code, function(data) {
+                        $.each(data, function(index, district) {
+                            districtSelect.append($('<option>', {
+                                value: district.name,
+                                text: district.name,
+                                'data-code': district.code
+                            }));
+                        });
+                        districtSelect.prop('disabled', false);
+                    });
+                }
+            });
+
+            // Handle District Change
+            $('#subdistrict').on('change', function() {
+                var code = $(this).find(':selected').data('code');
+                var villageSelect = $('#kelurahan');
+                
+                villageSelect.empty().append('<option value="">-- Pilih Kelurahan --</option>').prop('disabled', true);
+                
+                if (code) {
+                    $.get('/api/regions/villages/' + code, function(data) {
+                        $.each(data, function(index, village) {
+                            villageSelect.append($('<option>', {
+                                value: village.name,
+                                text: village.name,
+                                'data-code': village.code
+                            }));
+                        });
+                        villageSelect.prop('disabled', false);
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -244,3 +244,13 @@ Route::prefix('seller-reports/{seller_id}')->group(function () {
     Route::get('/preview/stock', [SellerReportController::class, 'previewStock']);
     Route::get('/preview/low-stock', [SellerReportController::class, 'previewLowStock']);
 });
+
+// ========================================
+// REGION API ROUTES
+// ========================================
+Route::prefix('api/regions')->group(function () {
+    Route::get('/provinces', [\App\Http\Controllers\RegionController::class, 'provinces']);
+    Route::get('/regencies/{provinceCode}', [\App\Http\Controllers\RegionController::class, 'regencies']);
+    Route::get('/districts/{regencyCode}', [\App\Http\Controllers\RegionController::class, 'districts']);
+    Route::get('/villages/{districtCode}', [\App\Http\Controllers\RegionController::class, 'villages']);
+});

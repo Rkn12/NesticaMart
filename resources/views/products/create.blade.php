@@ -75,22 +75,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label class="block text-gray-700 font-medium mb-2">Provinsi <span class="text-red-500">*</span></label>
-                            <select name="location_province" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                            <select name="location_province" id="location_province" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent select2" required>
                                 <option value="">-- Pilih Provinsi --</option>
-                                <option value="DKI Jakarta">DKI Jakarta</option>
-                                <option value="Jawa Barat">Jawa Barat</option>
-                                <option value="Jawa Tengah">Jawa Tengah</option>
-                                <option value="Jawa Timur">Jawa Timur</option>
-                                <option value="Bali">Bali</option>
-                                <option value="Sumatera Utara">Sumatera Utara</option>
-                                <option value="Sumatera Selatan">Sumatera Selatan</option>
-                                <option value="Kalimantan Timur">Kalimantan Timur</option>
-                                <option value="Sulawesi Selatan">Sulawesi Selatan</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-gray-700 font-medium mb-2">Kota/Kabupaten <span class="text-red-500">*</span></label>
-                            <input type="text" name="location_city" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                            <select name="location_city" id="location_city" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent select2" required disabled>
+                                <option value="">-- Pilih Kota/Kabupaten --</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -124,7 +117,47 @@
     </div>
 </div>
 
+@endsection
+
+@section('extra-scripts')
 <script>
+$(document).ready(function() {
+    // Initialize Select2
+    $('.select2').select2();
+
+    // Load Provinces
+    $.get('/api/regions/provinces', function(data) {
+        var provinceSelect = $('#location_province');
+        $.each(data, function(index, province) {
+            provinceSelect.append($('<option>', {
+                value: province.name,
+                text: province.name,
+                'data-code': province.code
+            }));
+        });
+    });
+
+    // Handle Province Change
+    $('#location_province').on('change', function() {
+        var code = $(this).find(':selected').data('code');
+        var citySelect = $('#location_city');
+        
+        citySelect.empty().append('<option value="">-- Pilih Kota/Kabupaten --</option>').prop('disabled', true);
+        
+        if (code) {
+            $.get('/api/regions/regencies/' + code, function(data) {
+                $.each(data, function(index, city) {
+                    citySelect.append($('<option>', {
+                        value: city.name,
+                        text: city.name
+                    }));
+                });
+                citySelect.prop('disabled', false);
+            });
+        }
+    });
+});
+
 // Load sellers dan categories saat halaman load
 document.addEventListener('DOMContentLoaded', async function() {
     try {

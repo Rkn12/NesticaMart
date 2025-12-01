@@ -17,7 +17,7 @@
             <p style="color: #666; margin-bottom: 20px;">Daftar penjual untuk setiap lokasi provinsi</p>
             <div class="form-group">
                 <label>Filter Provinsi (opsional)</label>
-                <select id="provinceSelect" class="form-control">
+                <select id="provinceSelect" class="form-control select2" style="width: 100%;">
                     <option value="">Semua Provinsi</option>
                 </select>
             </div>
@@ -58,22 +58,19 @@
 
 @section('extra-scripts')
 <script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+
     async function loadProvinces() {
         try {
-            const response = await fetch('/reports/provinces', {
-                headers: {'Accept': 'application/json'}
-            });
-            const result = await response.json();
+            const response = await fetch('/api/regions/provinces');
+            const data = await response.json();
             
-            if (result.success) {
-                const select = document.getElementById('provinceSelect');
-                result.data.forEach(province => {
-                    const option = document.createElement('option');
-                    option.value = province;
-                    option.textContent = province;
-                    select.appendChild(option);
-                });
-            }
+            const select = $('#provinceSelect');
+            data.forEach(province => {
+                select.append(new Option(province.name, province.name));
+            });
         } catch (error) {
             console.error('Error:', error);
         }
