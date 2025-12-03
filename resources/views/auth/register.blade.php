@@ -26,7 +26,7 @@
 
         /* Header Styles */
         .top-bar {
-            background-color: #6B705C; /* Olive green tone */
+            background-color: #7E991E; /* Olive green tone */
             color: #FDFBF0;
             text-align: center;
             padding: 5px 0;
@@ -47,14 +47,18 @@
         }
 
         .banner {
-            background-color: #A5A58D; /* Fallback color */
-            background-image: repeating-linear-gradient(45deg, #A5A58D 0, #A5A58D 10px, #B7B7A4 10px, #B7B7A4 20px);
+            background-color: #A5A58D;
+            /* Ganti 'images/banner.jpg' dengan nama file gambar Anda yang ada di folder public/images */
+            background-image: url("{{ asset('images/banner.PNG') }}");
+            background-size: cover; /* Mengatur gambar agar memenuhi area */
+            background-position: center; /* Mengatur posisi gambar di tengah */
             height: 150px;
             display: flex;
             align-items: center;
             padding-left: 50px;
             position: relative;
             overflow: hidden;
+            color: #fff;
         }
         
         .banner::before {
@@ -69,10 +73,10 @@
 
         .banner h1 {
             font-size: 48px;
-            color: #FDFBF0;
+            color: #e3e3e3ff;
             position: relative;
             z-index: 1;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 3px 3px 4px rgba(0,0,0,1);
         }
 
         /* Form Styles */
