@@ -9,12 +9,25 @@
 
 @section('content')
     <div style="margin-bottom: 30px;">
-        <h2 style="color: #333; margin-bottom: 10px;">Selamat Datang, {{ Auth::user()->name }}! 👋</h2>
+        <h2 style="color: #333; margin-bottom: 10px;">
+            @if(Auth::user()->role === 'penjual' && Auth::user()->seller)
+                Selamat Datang, {{ Auth::user()->name }}! 👋
+                <small style="font-size: 16px; color: #666; display: block; font-weight: normal;">
+                    {{ Auth::user()->seller->store_name }}
+                </small>
+            @else
+                Selamat Datang, {{ Auth::user()->name }}! 👋
+            @endif
+        </h2>
         <p style="color: #666;">
             @if(Auth::user()->isPlatform())
                 Berikut adalah ringkasan platform marketplace
             @elseif(Auth::user()->isPenjual())
-                Berikut adalah ringkasan toko Anda
+                @if(Auth::user()->seller)
+                    Berikut adalah ringkasan untuk {{ Auth::user()->seller->store_name }}
+                @else
+                    Berikut adalah ringkasan toko Anda
+                @endif
             @else
                 Selamat berbelanja di marketplace kami
             @endif

@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\SellerManagementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductUploadController;
 use App\Http\Controllers\ProductReviewController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SellerDashboardController;
@@ -38,6 +40,10 @@ Route::get('/products/{id}/review', [ProductController::class, 'reviewForm'])->n
 Route::post('/reviews', [ProductReviewController::class, 'store']);
 Route::get('/reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
 
+// API Routes untuk form upload produk
+Route::get('/api/provinces', [RegionController::class, 'provinces']);
+Route::get('/api/provinces/{provinceCode}/regencies', [RegionController::class, 'regencies']);
+
 // ========================================
 // PROTECTED ROUTES (Requires Auth)
 // ========================================
@@ -48,31 +54,24 @@ Route::middleware('auth')->group(function () {
     
     // Platform Admin Only Routes
     Route::middleware('role:platform')->group(function () {
+        // Laporan Penjual - SRS-MartPlace-09 (harus di atas {id} route)
+        Route::get('/admin/sellers/report', [\App\Http\Controllers\Admin\SellerReportController::class, 'index'])->name('admin.sellers.report');
+        Route::get('/admin/sellers/report/pdf', [\App\Http\Controllers\Admin\SellerReportController::class, 'generatePdf'])->name('admin.sellers.report.pdf');
+        
+        // Manajemen Seller - SRS-MartPlace-09
+        Route::get('/admin/sellers', [SellerManagementController::class, 'index'])->name('admin.sellers.index');
+        Route::get('/admin/sellers/{id}', [SellerManagementController::class, 'show'])->name('admin.sellers.show');
+        Route::post('/admin/sellers/{id}/status', [SellerManagementController::class, 'updateStatus'])->name('admin.sellers.update-status');
+        Route::post('/admin/sellers/{id}/toggle-active', [SellerManagementController::class, 'toggleActive'])->name('admin.sellers.toggle-active');
+        
+        // Legacy routes (keep for backward compatibility)
         Route::get('/sellers', function (\Illuminate\Http\Request $request) {
-            $query = \App\Models\Seller::query();
-            
-            if ($request->has('search')) {
-                $search = $request->search;
-                $query->where(function($q) use ($search) {
-                    $q->where('store_name', 'like', "%{$search}%")
-                      ->orWhere('owner_name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-                });
-            }
-            
-            if ($request->has('status')) {
-                $query->where('status', $request->status);
-            }
-            
-            $sellers = $query->orderBy('created_at', 'desc')->paginate(10);
-            
-            return view('sellers.index', compact('sellers'));
-        })->name('sellers.index');
+            return redirect()->route('admin.sellers.index', $request->all());
+        });
         
         Route::get('/sellers/{id}', function ($id) {
-            $seller = \App\Models\Seller::with(['products.category'])->findOrFail($id);
-            return view('sellers.show', compact('seller'));
-        })->name('sellers.show');
+            return redirect()->route('admin.sellers.show', $id);
+        });
         
         Route::get('/dashboard/platform', function () {
             return view('dashboard.platform');
@@ -84,7 +83,7 @@ Route::middleware('auth')->group(function () {
     });
     
     // Penjual Only Routes
-    Route::middleware('role:penjual')->group(function () {
+    Route::middleware(['role:penjual', 'seller.active'])->group(function () {
         Route::get('/seller/dashboard', function () {
             return view('seller.dashboard');
         })->name('seller.dashboard');

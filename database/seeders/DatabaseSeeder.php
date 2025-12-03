@@ -26,27 +26,28 @@ class DatabaseSeeder extends Seeder
 
         // Seed kategori produk dan penjual terlebih dahulu
         $this->call([
+            IndonesiaRegionSeeder::class,
             KategoriProdukSeeder::class,
             PenjualSeeder::class,
         ]);
 
         // Create penjual users (linked to approved sellers)
         User::factory()->create([
-            'name' => 'Penjual 1',
+            'name' => 'Budi Santoso',
             'email' => 'penjual1@example.com',
             'role' => 'penjual',
             'seller_id' => 1,
         ]);
 
         User::factory()->create([
-            'name' => 'Penjual 2',
+            'name' => 'Siti Rahayu',
             'email' => 'penjual2@example.com',
             'role' => 'penjual',
             'seller_id' => 2,
         ]);
 
         User::factory()->create([
-            'name' => 'Penjual 3',
+            'name' => 'Andi Wijaya',
             'email' => 'penjual3@example.com',
             'role' => 'penjual',
             'seller_id' => 3,

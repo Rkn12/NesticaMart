@@ -137,7 +137,13 @@
         <h1>🛍️ Marketplace</h1>
         <div class="navbar-right">
             <div class="user-info">
-                <span>Halo, {{ Auth::user()->name }}</span>
+                <span>
+                    @if(Auth::user()->role === 'penjual' && Auth::user()->seller)
+                        {{ Auth::user()->seller->store_name }} ({{ Auth::user()->seller->owner_name }})
+                    @else
+                        {{ Auth::user()->name }}
+                    @endif
+                </span>
             </div>
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                 @csrf

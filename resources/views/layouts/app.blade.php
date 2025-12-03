@@ -437,7 +437,7 @@
             
             @if(Auth::user()->isPlatform())
                 <!-- Menu untuk Platform Admin -->
-                <a href="/sellers" class="menu-item {{ Request::is('sellers*') ? 'active' : '' }}">
+                <a href="{{ route('admin.sellers.index') }}" class="menu-item {{ Request::is('admin/sellers*') && !Request::is('admin/sellers/report*') ? 'active' : '' }}">
                     <i>👥</i> Kelola Penjual
                 </a>
                 <a href="/dashboard/platform" class="menu-item {{ Request::is('dashboard/platform*') ? 'active' : '' }}">
@@ -472,7 +472,13 @@
             <div class="navbar-right">
                 @if(Auth::check())
                     <div class="user-info">
-                        <span>{{ Auth::user()->name }}</span>
+                        <span>
+                            @if(Auth::user()->role === 'penjual' && Auth::user()->seller)
+                                {{ Auth::user()->seller->store_name }}
+                            @else
+                                {{ Auth::user()->name }}
+                            @endif
+                        </span>
                     </div>
                     <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                         @csrf

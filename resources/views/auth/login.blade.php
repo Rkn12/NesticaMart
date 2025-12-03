@@ -11,6 +11,12 @@
         </div>
     @endif
     
+    @if (session('error'))
+        <div class="alert alert-error" style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #721c24;">
+            <strong>⚠️ {{ session('error') }}</strong>
+        </div>
+    @endif
+    
     @if ($errors->any())
         <div class="alert alert-danger">
             @foreach ($errors->all() as $error)

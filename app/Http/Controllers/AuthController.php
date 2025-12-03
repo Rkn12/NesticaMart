@@ -37,6 +37,37 @@ class AuthController extends Controller
         
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
+            
+            $user = Auth::user();
+            
+            // Cek khusus untuk seller
+            if ($user->role === 'penjual') {
+                // Gunakan relasi yang sudah dibuat
+                $seller = $user->seller;
+                
+                if (!$seller) {
+                    Auth::logout();
+                    return redirect('/login')
+                        ->with('error', 'Akun seller tidak ditemukan.');
+                }
+                
+                // Cek status approved
+                if ($seller->status !== 'approved') {
+                    Auth::logout();
+                    $message = $seller->status === 'pending' 
+                        ? 'Akun Anda masih menunggu persetujuan admin.' 
+                        : 'Akun Anda telah ditolak oleh admin.';
+                    return redirect('/login')->with('error', $message);
+                }
+                
+                // Cek status aktif
+                if (!$seller->is_active) {
+                    Auth::logout();
+                    return redirect('/login')
+                        ->with('error', 'Akun Anda telah dinonaktifkan oleh admin. Silakan hubungi admin untuk informasi lebih lanjut.');
+                }
+            }
+            
             return redirect()->intended('/dashboard');
         }
 

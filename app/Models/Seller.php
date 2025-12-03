@@ -29,6 +29,8 @@ class Seller extends Model
         'foto_ktp_pic',
         'file_ktp_pic',
         'status',
+        'is_approved',
+        'is_active',
         'verification_note',
         'verification_token',
         'email_verified_at',
@@ -75,6 +77,12 @@ class Seller extends Model
     protected static function newFactory()
     {
         return \Database\Factories\PenjualFactory::new();
+    }
+
+    // Relasi ke user
+    public function user()
+    {
+        return $this->hasOne(User::class);
     }
 
     // Relasi ke produk

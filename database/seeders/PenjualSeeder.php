@@ -32,6 +32,8 @@ class PenjualSeeder extends Seeder
             'pic_phone' => '081234567890',
             'pic_email' => 'budi.elektronik@gmail.com',
             'status' => 'approved',
+            'is_approved' => true,
+            'is_active' => true,
         ]);
 
         // Seller 2 - Toko Buku Surabaya (Approved)
@@ -53,6 +55,8 @@ class PenjualSeeder extends Seeder
             'pic_phone' => '082345678901',
             'pic_email' => 'siti.buku@gmail.com',
             'status' => 'approved',
+            'is_approved' => true,
+            'is_active' => true,
         ]);
 
         // Seller 3 - Fashion Store Bandung (Approved)
@@ -74,6 +78,8 @@ class PenjualSeeder extends Seeder
             'pic_phone' => '083456789012',
             'pic_email' => 'andi.fashion@gmail.com',
             'status' => 'approved',
+            'is_approved' => true,
+            'is_active' => true,
         ]);
 
         // Seller 4 - Toko Alat Olahraga Jogja (Approved)
@@ -95,6 +101,8 @@ class PenjualSeeder extends Seeder
             'pic_phone' => '084567890123',
             'pic_email' => 'dedi.sport@gmail.com',
             'status' => 'approved',
+            'is_approved' => true,
+            'is_active' => true,
         ]);
 
         // Seller 5 - Toko Kosmetik Bali (Approved)
@@ -116,6 +124,8 @@ class PenjualSeeder extends Seeder
             'pic_phone' => '085678901234',
             'pic_email' => 'made.kosmetik@gmail.com',
             'status' => 'approved',
+            'is_approved' => true,
+            'is_active' => true,
         ]);
 
         // Seller 6 - Toko Furniture Medan (Pending)

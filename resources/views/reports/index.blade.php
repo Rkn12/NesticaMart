@@ -8,8 +8,16 @@
         <div class="card">
             <h3 style="margin-bottom: 15px;">📊 Laporan Status Penjual</h3>
             <p style="color: #666; margin-bottom: 20px;">Laporan daftar penjual aktif dan tidak aktif</p>
-            <a href="/reports/seller-status" class="btn btn-primary" target="_blank">Download PDF</a>
-            <a href="/reports/preview/seller-status" class="btn btn-sm btn-warning" style="margin-top: 10px;" target="_blank">Preview JSON</a>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Filter Status</label>
+                <select id="sellerStatusFilter" class="form-control">
+                    <option value="all">Semua Status</option>
+                    <option value="active">Aktif Saja</option>
+                    <option value="inactive">Tidak Aktif Saja</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="downloadSellerReport()">Download PDF</button>
+            <a href="/admin/sellers/report" class="btn btn-sm btn-secondary" style="margin-top: 10px;" target="_blank">Lihat Detail</a>
         </div>
         
         <div class="card">
@@ -121,6 +129,12 @@
     document.getElementById('sellerSelect').addEventListener('change', function() {
         document.getElementById('sellerReports').style.display = this.value ? 'grid' : 'none';
     });
+    
+    function downloadSellerReport() {
+        const status = document.getElementById('sellerStatusFilter').value;
+        const url = `/admin/sellers/report/pdf?status=${status}`;
+        window.open(url, '_blank');
+    }
     
     function downloadProvinceReport() {
         const province = document.getElementById('provinceSelect').value;

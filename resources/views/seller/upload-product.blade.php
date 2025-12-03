@@ -3,38 +3,86 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">
+        <div class="col-md-11">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-plus-circle"></i> Upload Produk Baru
+                        <i class="fas fa-plus-circle me-2"></i> Upload Produk Baru
                     </h5>
+                    <small>Lengkapi informasi produk dengan detail untuk meningkatkan penjualan</small>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     @if ($errors->any())
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <h6><i class="fas fa-exclamation-triangle me-2"></i>Terdapat kesalahan:</h6>
                             <ul class="mb-0">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     @endif
 
                     <form action="{{ route('seller.products.upload') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
+                        <!-- Gambar Produk Section -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="fas fa-images me-2"></i>Gambar Produk
+                                        </h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="images" class="form-label">Upload Gambar <span class="text-danger">*</span></label>
+                                                <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*" required>
+                                                <div class="form-text">
+                                                    <i class="fas fa-info-circle me-1"></i>
+                                                    Maksimal 5 gambar, ukuran maksimal 2MB per gambar. Gambar pertama akan menjadi gambar utama.
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div id="image-preview" class="mt-2">
+                                                    <div class="text-muted text-center p-3">
+                                                        <i class="fas fa-camera fa-2x mb-2"></i>
+                                                        <p>Preview gambar akan muncul di sini</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Informasi Dasar Produk -->
-                        <div class="row">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-primary mb-3">
+                                    <i class="fas fa-box me-2"></i>Informasi Dasar Produk
+                                </h6>
+                            </div>
                             <div class="col-md-8">
-                                <h6 class="text-primary mb-3">Informasi Dasar</h6>
-                                
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Nama Produk <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" 
                                            placeholder="Contoh: Sepatu Sneakers Nike Air Max 270" required>
+                                    <div class="form-text">Gunakan nama yang jelas dan mudah dicari</div>
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Deskripsi Produk <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="description" name="description" rows="6" required
+                                              placeholder="Jelaskan detail produk, kondisi, keunggulan, dll. Minimal 50 karakter">{{ old('description') }}</textarea>
+                                    <div class="form-text">
+                                        <span id="desc-count">0</span>/50 karakter minimum
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="category_id" class="form-label">Kategori <span class="text-danger">*</span></label>
                                     <select class="form-select" id="category_id" name="category_id" required>
@@ -48,20 +96,18 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">Deskripsi Produk <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" id="description" name="description" rows="6" required
-                                              placeholder="Jelaskan detail produk, kondisi, keunggulan, dll. Minimal 50 karakter">{{ old('description') }}</textarea>
-                                    <div class="form-text">Minimal 50 karakter untuk deskripsi yang informatif</div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <h6 class="text-primary mb-3">Gambar Produk</h6>
-                                <div class="mb-3">
-                                    <label for="images" class="form-label">Upload Gambar <span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*" required>
-                                    <div class="form-text">Maksimal 5 gambar, ukuran maksimal 2MB per gambar</div>
-                                    <div id="image-preview" class="mt-2"></div>
+                                    <label for="kondisi" class="form-label">Kondisi <span class="text-danger">*</span></label>
+                                    <div class="btn-group w-100" role="group">
+                                        <input type="radio" class="btn-check" name="kondisi" id="kondisi_baru" value="baru" {{ old('kondisi') == 'baru' ? 'checked' : '' }} required>
+                                        <label class="btn btn-outline-success" for="kondisi_baru">
+                                            <i class="fas fa-star me-1"></i>Baru
+                                        </label>
+                                        
+                                        <input type="radio" class="btn-check" name="kondisi" id="kondisi_bekas" value="bekas" {{ old('kondisi') == 'bekas' ? 'checked' : '' }}>
+                                        <label class="btn btn-outline-warning" for="kondisi_bekas">
+                                            <i class="fas fa-recycle me-1"></i>Bekas
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,15 +206,17 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="location_province" class="form-label">Provinsi <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="location_province" name="location_province" 
-                                           value="{{ old('location_province') }}" required placeholder="Contoh: DKI Jakarta">
+                                    <select class="form-select" id="location_province" name="location_province" required>
+                                        <option value="">Pilih Provinsi</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="location_city" class="form-label">Kota/Kabupaten <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="location_city" name="location_city" 
-                                           value="{{ old('location_city') }}" required placeholder="Contoh: Jakarta Selatan">
+                                    <select class="form-select" id="location_city" name="location_city" required disabled>
+                                        <option value="">Pilih Kota/Kabupaten</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -208,6 +256,87 @@
 </div>
 
 <script>
+// Load provinces when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadProvinces();
+});
+
+// Load provinces
+function loadProvinces() {
+    const provinceSelect = document.getElementById('location_province');
+    
+    // Add loading option
+    provinceSelect.innerHTML = '<option value="">Memuat provinsi...</option>';
+    
+    fetch('/api/provinces')
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Provinces data:', data);
+            provinceSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
+            
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(province => {
+                    const option = document.createElement('option');
+                    option.value = province.name;
+                    option.dataset.code = province.code;
+                    option.textContent = province.name;
+                    provinceSelect.appendChild(option);
+                });
+            } else {
+                provinceSelect.innerHTML = '<option value="">Data provinsi tidak tersedia</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading provinces:', error);
+            provinceSelect.innerHTML = '<option value="">Error loading provinces</option>';
+        });
+}
+
+// Province change event - load cities
+document.getElementById('location_province').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const selectedProvince = this.value;
+    const provinceCode = selectedOption.dataset.code;
+    const citySelect = document.getElementById('location_city');
+    
+    // Reset city dropdown
+    citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+    citySelect.disabled = true;
+    
+    if (selectedProvince && provinceCode) {
+        citySelect.innerHTML = '<option value="">Memuat kota/kabupaten...</option>';
+        
+        fetch(`/api/provinces/${provinceCode}/regencies`)
+            .then(response => response.json())
+            .then(cities => {
+                console.log('Cities data:', cities);
+                citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+                
+                if (Array.isArray(cities) && cities.length > 0) {
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.name;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+                    citySelect.disabled = false;
+                } else {
+                    citySelect.innerHTML = '<option value="">Data kota tidak tersedia</option>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading cities:', error);
+                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+            });
+    }
+});
+
 // Image preview
 document.getElementById('images').addEventListener('change', function(e) {
     const preview = document.getElementById('image-preview');
