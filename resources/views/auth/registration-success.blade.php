@@ -13,26 +13,28 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #8A9B3A 0%, #F7F4E8 55%, #EFE6D4 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            color: #3A2A1E;
         }
         
         .success-container {
-            background: white;
+            background: #FBF9F1;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
             max-width: 600px;
             width: 100%;
             overflow: hidden;
+            border: 1px solid #E0D7C4;
         }
         
         .header {
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-            color: white;
+            background: linear-gradient(135deg, #8A9B3A 0%, #6F7D2B 100%);
+            color: #FBF9F1;
             padding: 40px 30px;
             text-align: center;
         }
@@ -45,11 +47,12 @@
         .header h1 {
             font-size: 28px;
             margin-bottom: 10px;
+            letter-spacing: 0.03em;
         }
         
         .header p {
             font-size: 16px;
-            opacity: 0.9;
+            opacity: 0.95;
         }
         
         .content {
@@ -57,7 +60,7 @@
         }
         
         .success-message {
-            color: #27ae60;
+            color: #6F7D2B;
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 25px;
@@ -65,7 +68,7 @@
         }
         
         .description {
-            color: #2c3e50;
+            color: #4C3B2A;
             font-size: 16px;
             line-height: 1.6;
             margin-bottom: 30px;
@@ -73,37 +76,37 @@
         }
         
         .info-box {
-            background: #f8f9fa;
+            background: #F7F4E8;
             padding: 25px;
             border-radius: 8px;
             margin: 30px 0;
-            border-left: 4px solid #27ae60;
+            border-left: 4px solid #8A9B3A;
         }
         
         .info-box h3 {
-            color: #2c3e50;
+            color: #4C3B2A;
             margin-bottom: 15px;
             font-size: 18px;
         }
         
         .info-box p {
-            color: #555;
+            color: #5E4B35;
             line-height: 1.6;
             margin-bottom: 10px;
         }
         
         .timeline {
-            background: #e8f4fd;
-            border: 1px solid #bee5eb;
+            background: #F0F4D8;
+            border: 1px solid #C2D36B;
             padding: 25px;
             border-radius: 8px;
             margin: 30px 0;
-            color: #0c5460;
+            color: #495827;
         }
         
         .timeline h3 {
             margin-bottom: 20px;
-            color: #0c5460;
+            color: #495827;
             font-size: 18px;
         }
         
@@ -112,7 +115,7 @@
             align-items: flex-start;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #d1ecf1;
+            border-bottom: 1px solid #D7E1A8;
         }
         
         .timeline-item:last-child {
@@ -121,8 +124,8 @@
         }
         
         .timeline-step {
-            background: #17a2b8;
-            color: white;
+            background: #8A9B3A;
+            color: #FBF9F1;
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -137,28 +140,37 @@
         
         .timeline-content h4 {
             margin: 0 0 5px;
-            color: #0c5460;
+            color: #495827;
             font-size: 16px;
         }
         
         .timeline-content p {
             margin: 0;
             font-size: 14px;
-            color: #6c757d;
+            color: #6C7450;
         }
         
         .important-note {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
+            background: #FFF7DE;
+            border: 1px solid #F0D48A;
             padding: 20px;
             border-radius: 8px;
             margin: 30px 0;
-            color: #856404;
+            color: #6E531C;
         }
         
         .important-note h4 {
             margin-bottom: 10px;
-            color: #856404;
+            color: #6E531C;
+        }
+        
+        .important-note ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .important-note li {
+            margin-bottom: 6px;
         }
         
         .actions {
@@ -174,43 +186,46 @@
             font-weight: 600;
             margin: 5px 10px;
             transition: all 0.3s;
+            font-size: 14px;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #8A9B3A 0%, #6F7D2B 100%);
+            color: #FBF9F1;
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(74, 54, 38, 0.25);
         }
         
         .btn-secondary {
-            background: #95a5a6;
-            color: white;
+            background: #4A3626;
+            color: #FBF9F1;
         }
         
         .btn-secondary:hover {
-            background: #7f8c8d;
+            background: #3A2A1E;
         }
         
+        
         .footer {
-            background: #2c3e50;
-            color: white;
+            display: flex;
+            justify-content: space-between;
+            background: #2B231B;
+            color: #F7F4E8;
             padding: 20px 30px;
-            text-align: center;
             font-size: 14px;
         }
         
-        .footer a {
-            color: #3498db;
-            text-decoration: none;
+        .footer-left {
+            text-align: left;
         }
         
-        .footer a:hover {
-            text-decoration: underline;
+        .footer-right {
+            text-align: right;
         }
+
         
         @media (max-width: 600px) {
             .success-container {
@@ -304,7 +319,7 @@
             
             <div class="important-note">
                 <h4>⚠️ Hal Penting:</h4>
-                <ul style="padding-left: 20px; margin: 10px 0;">
+                <ul>
                     <li>Pastikan email Anda aktif untuk menerima notifikasi</li>
                     <li>Siapkan dokumen tambahan jika diminta oleh admin</li>
                     <li>Jangan mendaftar ulang selama proses verifikasi berlangsung</li>
@@ -319,8 +334,13 @@
         </div>
         
         <div class="footer">
-            <p>Butuh bantuan? <a href="mailto:support@martplace.com">Hubungi Customer Service</a></p>
-            <p>&copy; {{ date('Y') }} MartPlace. Platform Jual Beli Terpercaya.</p>
+                <div class="footer-left">
+                    <h3>Nestica</h3>
+                    <p>(+62) 123 144 567<br>info@nestica.com</p>
+                </div>
+                <div class="footer-right">
+                    <p>&copy; 2025 Nestica<br>Made with love by kelompok 4</p>
+                </div>
         </div>
     </div>
 </body>
