@@ -420,17 +420,14 @@
             @endif
         </div>
         <div class="sidebar-menu">
-            <!-- Menu untuk semua (guest & auth) -->
+            @if(Auth::check())
             <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
                 <i>🛍️</i> Katalog Produk
             </a>
             <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
                 <i>⭐</i> Review Produk
             </a>
-            
-            @if(Auth::check())
-            <hr style="border: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-            
+
             <a href="/dashboard" class="menu-item {{ Request::is('dashboard') ? 'active' : '' }}">
                 <i>📊</i> Dashboard
             </a>
