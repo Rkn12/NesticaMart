@@ -176,7 +176,9 @@ class ProductController extends Controller
             }
         ])->findOrFail($id);
 
-        return view('products.show', compact('product'));
+        $categories = ProductCategory::orderBy('name')->get();
+
+        return view('products.show', compact('product', 'categories'));
     }
 
     /**

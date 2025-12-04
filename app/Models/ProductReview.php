@@ -16,6 +16,7 @@ class ProductReview extends Model
         'reviewer_email',
         'reviewer_province',
         'rating',
+        'review_title',
         'comment',
         'photos',
         'video',
