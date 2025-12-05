@@ -228,6 +228,9 @@ Route::prefix('reports')->group(function () {
     // Get list provinces
     Route::get('/provinces', [ReportController::class, 'getProvinces']);
     
+    // Get all sellers (API)
+    Route::get('/sellers-list', [ReportController::class, 'getAllSellers']);
+    
     // Preview (JSON)
     Route::get('/preview/seller-status', [ReportController::class, 'previewSellerStatus']);
 });

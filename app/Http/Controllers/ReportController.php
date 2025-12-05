@@ -13,21 +13,47 @@ class ReportController extends Controller
     /**
      * SRS-MartPlace-09: Laporan daftar akun penjual aktif dan tidak aktif (PDF)
      */
-    public function sellerStatusReport()
+    public function sellerStatusReport(Request $request)
     {
-        $activeSellers = Seller::where('status', 'approved')->get();
-        $inactiveSellers = Seller::whereIn('status', ['pending', 'rejected'])->get();
+        $statusFilter = $request->get('status', 'all'); // all, active, inactive
+        
+        // Active = approved AND is_active=true
+        // Inactive = everything else (approved but is_active=false, pending, rejected)
+        if ($statusFilter === 'active') {
+            // Only show sellers that are approved AND active
+            $sellers = Seller::where('status', 'approved')
+                ->where('is_active', true)
+                ->orderBy('store_name')
+                ->get();
+            $title = 'Laporan Daftar Akun Penjual Aktif';
+        } elseif ($statusFilter === 'inactive') {
+            // Show all inactive sellers (approved but not active, pending, rejected)
+            $sellers = Seller::where(function($query) {
+                $query->where(function($q) {
+                    $q->where('status', 'approved')->where('is_active', false);
+                })
+                ->orWhere('status', 'pending')
+                ->orWhere('status', 'rejected');
+            })
+            ->orderBy('store_name')
+            ->get();
+            $title = 'Laporan Daftar Akun Penjual Tidak Aktif';
+        } else {
+            // Show all sellers
+            $sellers = Seller::orderBy('is_active', 'desc')
+                ->orderBy('status')
+                ->orderBy('store_name')
+                ->get();
+            $title = 'Laporan Daftar Akun Penjual (Semua Status)';
+        }
 
         $data = [
-            'title' => 'Laporan Daftar Akun Penjual',
+            'title' => $title,
             'date' => now()->format('d F Y'),
-            'active_sellers' => $activeSellers,
-            'inactive_sellers' => $inactiveSellers,
-            'summary' => [
-                'total_active' => $activeSellers->count(),
-                'total_inactive' => $inactiveSellers->count(),
-                'total' => Seller::count(),
-            ]
+            'time' => now()->format('H:i'),
+            'processedBy' => auth()->user()->name ?? 'Admin',
+            'sellers' => $sellers,
+            'status_filter' => $statusFilter,
         ];
 
         $pdf = Pdf::loadView('reports.seller-status', $data);
@@ -41,7 +67,8 @@ class ReportController extends Controller
     {
         $province = $request->get('province');
         
-        $query = Seller::where('status', 'approved');
+        // Get all sellers regardless of is_active, just need to be approved
+        $query = Seller::query();
         
         if ($province) {
             $query->where('province', $province);
@@ -58,6 +85,8 @@ class ReportController extends Controller
         $data = [
             'title' => $title,
             'date' => now()->format('d F Y'),
+            'time' => now()->format('H:i'),
+            'processedBy' => auth()->user()->name ?? 'Admin',
             'sellers_by_province' => $sellersByProvince,
             'summary' => [
                 'total_sellers' => $sellers->count(),
@@ -93,6 +122,8 @@ class ReportController extends Controller
         $data = [
             'title' => 'Laporan Daftar Produk dan Rating',
             'date' => now()->format('d F Y'),
+            'time' => now()->format('H:i'),
+            'processedBy' => auth()->user()->name ?? 'Admin',
             'products' => $products,
             'summary' => [
                 'total_products' => $products->count(),
@@ -118,6 +149,21 @@ class ReportController extends Controller
         return response()->json([
             'success' => true,
             'data' => $provinces
+        ]);
+    }
+
+    /**
+     * Get all sellers for dropdown (API)
+     */
+    public function getAllSellers()
+    {
+        $sellers = Seller::where('status', 'approved')
+            ->orderBy('store_name')
+            ->get(['id', 'store_name', 'city', 'province']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $sellers
         ]);
     }
 

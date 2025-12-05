@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Daftar Produk Berdasarkan Rating</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #000;
+            margin: 30px;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .header h2 {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+        .header p {
+            margin: 0;
+            font-size: 12px;
+        }
+        .note {
+            margin: 15px 0;
+            font-size: 11px;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table th, table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background: #f0f0f0;
+            font-weight: bold;
+            text-align: center;
+        }
+        .row-dots {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p>(SRS-MartPlace-11)</p>
+        <h2>Laporan Daftar Produk Berdasarkan Rating</h2>
+        <p>Tanggal dibuat: {{ $date }} {{ $time }} oleh {{ $processedBy }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 6%;">No</th>
+                <th style="width: 20%;">Produk</th>
+                <th style="width: 15%;">Kategori</th>
+                <th style="width: 15%;">Harga</th>
+                <th style="width: 12%;">Rating</th>
+                <th style="width: 17%;">Nama Toko</th>
+                <th style="width: 15%;">Propinsi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($products as $index => $product)
+            <tr>
+                <td style="text-align: center;">{{ $index + 1 }}</td>
+                <td>{{ $product->name }}</td>
+                <td>{{ $product->category->name ?? 'XXXXXXXX' }}</td>
+                <td>{{ number_format($product->price, 0, ',', '.') }}</td>
+                <td style="text-align: center;">{{ number_format($product->average_rating ?? 0, 1) }}</td>
+                <td>{{ $product->seller->store_name ?? 'XXXXXXXXXXXXX' }}</td>
+                <td>{{ $product->location_province }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="7" style="text-align: center;">Tidak ada data produk</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <p class="note">***) propinsi diisikan propinsi pemberi rating</p>
+
+    <div style="text-align: center; margin-top: 40px; font-size: 10px; color: #666; border-top: 1px solid #ddd; padding-top: 10px;">
+        <p style="margin: 5px 0;">Dokumen ini dibuat secara otomatis oleh sistem Nestica</p>
+        <p style="margin: 5px 0;">© 2025 Nestica - Platform Marketplace Furniture</p>
+    </div>
+</body>
+</html>

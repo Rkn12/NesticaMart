@@ -57,9 +57,9 @@
         </div>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;" id="sellerReports" style="display: none;">
-            <button class="btn btn-primary" onclick="downloadSellerStockReport()">Laporan Stok</button>
-            <button class="btn btn-primary" onclick="downloadSellerRatingReport()">Laporan Stok by Rating</button>
-            <button class="btn btn-danger" onclick="downloadLowStockReport()">Laporan Stok Habis</button>
+            <button class="btn btn-primary" onclick="downloadSellerStockReport()">Laporan Daftar Produk By Stok</button>
+            <button class="btn btn-primary" onclick="downloadSellerRatingReport()">Laporan Daftar Produk By Rating</button>
+            <button class="btn btn-danger" onclick="downloadLowStockReport()">Laporan Daftar Produk Segera Dipesan</button>
         </div>
     </div>
 @endsection
@@ -107,22 +107,22 @@
     
     async function loadSellers() {
         try {
-            const response = await fetch('/sellers?status=approved', {
+            const response = await fetch('/reports/sellers-list', {
                 headers: {'Accept': 'application/json'}
             });
             const result = await response.json();
             
             if (result.success) {
                 const select = document.getElementById('sellerSelect');
-                result.data.data.forEach(seller => {
+                result.data.forEach(seller => {
                     const option = document.createElement('option');
                     option.value = seller.id;
-                    option.textContent = seller.store_name;
+                    option.textContent = `${seller.store_name} (${seller.city}, ${seller.province})`;
                     select.appendChild(option);
                 });
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error loading sellers:', error);
         }
     }
     
@@ -132,7 +132,7 @@
     
     function downloadSellerReport() {
         const status = document.getElementById('sellerStatusFilter').value;
-        const url = `/admin/sellers/report/pdf?status=${status}`;
+        const url = `/reports/seller-status?status=${status}`;
         window.open(url, '_blank');
     }
     

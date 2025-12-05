@@ -21,6 +21,8 @@ class SellerReportController extends Controller
         $data = [
             'title' => 'Laporan Daftar Stock Produk',
             'date' => now()->format('d F Y'),
+            'time' => now()->format('H:i'),
+            'processedBy' => auth()->user()->name ?? 'Admin',
             'seller' => $products->first()?->seller,
             'products' => $products,
             'summary' => [
@@ -48,6 +50,8 @@ class SellerReportController extends Controller
         $data = [
             'title' => 'Laporan Stock Produk Berdasarkan Rating',
             'date' => now()->format('d F Y'),
+            'time' => now()->format('H:i'),
+            'processedBy' => auth()->user()->name ?? 'Admin',
             'seller' => $products->first()?->seller,
             'products' => $products,
             'summary' => [
@@ -76,6 +80,8 @@ class SellerReportController extends Controller
         $data = [
             'title' => 'Laporan Stock Barang Segera Habis (Stock < 2)',
             'date' => now()->format('d F Y'),
+            'time' => now()->format('H:i'),
+            'processedBy' => auth()->user()->name ?? 'Admin',
             'seller' => $products->first()?->seller ?? Product::where('seller_id', $seller_id)->first()?->seller,
             'products' => $products,
             'summary' => [
