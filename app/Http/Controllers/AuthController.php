@@ -66,8 +66,12 @@ class AuthController extends Controller
                     return redirect('/login')
                         ->with('error', 'Akun Anda telah dinonaktifkan oleh admin. Silakan hubungi admin untuk informasi lebih lanjut.');
                 }
+                
+                // Redirect seller ke seller dashboard
+                return redirect()->intended('/seller/dashboard');
             }
             
+            // Redirect non-seller (platform admin) ke dashboard umum
             return redirect()->intended('/dashboard');
         }
 

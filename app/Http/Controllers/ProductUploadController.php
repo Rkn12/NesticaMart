@@ -32,7 +32,7 @@ class ProductUploadController extends Controller
         // Get all categories
         $categories = ProductCategory::orderBy('name')->get();
         
-        return view('seller.upload-product', compact('categories', 'seller'));
+        return view('seller.products.upload', compact('categories', 'seller'));
     }
 
     /**

@@ -42,13 +42,13 @@ class ReviewProdukSeeder extends Seeder
             'comment' => 'Bagus sih, tapi agak berat untuk dibawa-bawa. Overall puas!',
         ]);
 
-        // Review untuk Mouse Wireless Logitech
+        // Review untuk Mouse Wireless Logitech (Jawa Barat juga - biar ada 2 dari provinsi sama)
         ProductReview::create([
             'product_id' => 2,
             'reviewer_name' => 'Budi Santoso',
             'reviewer_phone' => '083456789013',
             'reviewer_email' => 'budi.s@outlook.com',
-            'reviewer_province' => 'Jawa Timur',
+            'reviewer_province' => 'Jawa Barat',
             'rating' => 5,
             'comment' => 'Mouse enak dipake, wireless stabil, baterai awet. Recommended!',
         ]);

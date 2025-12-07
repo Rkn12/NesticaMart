@@ -181,4 +181,150 @@ class SellerDashboardController extends Controller
             'data' => $logs
         ]);
     }
+
+    /**
+     * Get products for seller
+     */
+    public function getProducts($seller_id, Request $request)
+    {
+        $limit = $request->get('limit', 10);
+        
+        $products = Product::where('seller_id', $seller_id)
+            ->with(['category', 'images'])
+            ->withCount('reviews')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get()
+            ->map(function($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'stock' => $product->stock,
+                    'average_rating' => $product->average_rating ?? 0,
+                    'review_count' => $product->reviews_count,
+                    'category' => $product->category ? ['id' => $product->category->id, 'name' => $product->category->name] : null,
+                    'images' => $product->images->map(function($image) {
+                        return ['image_url' => $image->image_url];
+                    }),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    }
+
+    /**
+     * Get rating distribution by province
+     */
+    public function getRatingDistribution($seller_id)
+    {
+        try {
+            $distribution = ProductReview::whereHas('product', function($q) use ($seller_id) {
+                    $q->where('seller_id', $seller_id);
+                })
+                ->select(
+                    'reviewer_province as province',
+                    DB::raw('COUNT(*) as count')
+                )
+                ->whereNotNull('reviewer_province')
+                ->where('reviewer_province', '!=', '')
+                ->groupBy('reviewer_province')
+                ->orderBy('count', 'desc')
+                ->limit(5)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $distribution
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get all products for seller
+     */
+    public function getAllProducts($seller_id)
+    {
+        try {
+            $products = Product::where('seller_id', $seller_id)
+                ->with(['category', 'images'])
+                ->withCount('reviews')
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function($product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'price' => $product->price,
+                        'stock' => $product->stock,
+                        'average_rating' => $product->average_rating ?? 0,
+                        'review_count' => $product->reviews_count,
+                        'is_active' => $product->is_active ?? 1,
+                        'category' => $product->category ? $product->category->name : 'Uncategorized',
+                        'image_url' => $product->images->first() ? $product->images->first()->image_url : null,
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'products' => $products
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle product active status
+     */
+    public function toggleProductStatus(Request $request, $product_id)
+    {
+        try {
+            $product = Product::findOrFail($product_id);
+            $product->is_active = $request->is_active;
+            $product->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product status updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete product
+     */
+    public function deleteProduct($product_id)
+    {
+        try {
+            $product = Product::findOrFail($product_id);
+            $product->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

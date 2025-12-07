@@ -17,8 +17,8 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+            background: #FBFDF0;
             display: flex;
         }
 
@@ -35,48 +35,102 @@
         }
         
         .sidebar {
-            width: 260px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            width: 240px;
+            background: #FBFDF0;
+            color: #483A2E;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             overflow-y: auto;
+            border-right: 1px solid #D5CDC2;
+            display: flex;
+            flex-direction: column;
         }
         
         .sidebar-header {
-            padding: 25px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-bottom: 1px solid #D5CDC2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .sidebar-header .seller-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-header .seller-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sidebar-header .seller-info {
+            flex: 1;
         }
         
         .sidebar-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 16px;
+            margin-bottom: 3px;
+            color: #483A2E;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sidebar-header h1 img.logo {
+            width: 24px;
+            height: 24px;
         }
         
         .sidebar-header p {
-            font-size: 13px;
-            opacity: 0.8;
+            font-size: 12px;
+            color: #7E991E;
         }
         
         .sidebar-menu {
             padding: 20px 0;
+            flex: 1;
+        }
+        
+        .menu-section {
+            margin-bottom: 25px;
+        }
+        
+        .menu-section-title {
+            padding: 8px 20px;
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
         
         .menu-item {
             padding: 12px 20px;
-            color: white;
+            color: #483A2E;
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
             transition: all 0.3s;
             border-left: 3px solid transparent;
+            font-size: 14px;
         }
         
-        .menu-item:hover,
+        .menu-item:hover {
+            background: #EFCD77;
+            border-left-color: #7E991E;
+        }
+        
         .menu-item.active {
-            background: rgba(255,255,255,0.1);
-            border-left-color: white;
+            background: #EFCD77;
+            border-left-color: #7E991E;
+            font-weight: bold;
         }
         
         .menu-item i {
@@ -85,23 +139,53 @@
             display: inline-block;
         }
         
+        .sidebar-logout {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid #D5CDC2;
+        }
+        
+        .sidebar-logout .btn-logout {
+            width: 100%;
+            background: #483A2E;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .sidebar-logout .btn-logout:hover {
+            background: #7E991E;
+        }
+        
+        .top-banner {
+            background: #7E991E;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
         .main-content {
-            margin-left: 260px;
-            width: calc(100% - 260px);
+            margin-left: 240px;
+            width: calc(100% - 240px);
             min-height: 100vh;
         }
         
         .navbar {
-            background: white;
-            padding: 15px 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            display: none;
         }
         
         .navbar-title h2 {
-            color: #333;
+            color: #483A2E;
             font-size: 24px;
         }
         
@@ -115,10 +199,11 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: #483A2E;
         }
         
         .btn-logout {
-            background: #e74c3c;
+            background: #483A2E;
             color: white;
             padding: 8px 20px;
             border: none;
@@ -129,7 +214,7 @@
         }
         
         .btn-logout:hover {
-            background: #c0392b;
+            background: #7E991E;
         }
         
         .container {
@@ -140,7 +225,7 @@
             background: white;
             border-radius: 10px;
             padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(72, 58, 46, 0.08);
             margin-bottom: 20px;
         }
         
@@ -152,7 +237,7 @@
         }
         
         .card-header h3 {
-            color: #333;
+            color: #483A2E;
             font-size: 20px;
         }
         
@@ -168,28 +253,29 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #7E991E;
             color: white;
         }
         
         .btn-primary:hover {
+            background: #6A8018;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(126, 153, 30, 0.3);
         }
         
         .btn-success {
-            background: #27ae60;
+            background: #7E991E;
             color: white;
         }
         
         .btn-danger {
-            background: #e74c3c;
+            background: #483A2E;
             color: white;
         }
         
         .btn-warning {
-            background: #f39c12;
-            color: white;
+            background: #EFCD77;
+            color: #483A2E;
         }
         
         .btn-sm {
@@ -210,8 +296,8 @@
         }
         
         table th {
-            background: #f8f9fa;
-            color: #555;
+            background: #EFCD77;
+            color: #483A2E;
             font-weight: 600;
         }
         
@@ -262,7 +348,7 @@
         
         .form-control:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #7E991E;
         }
         
         textarea.form-control {
@@ -296,7 +382,7 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #7E991E;
             color: white;
             padding: 25px;
             border-radius: 10px;
@@ -348,28 +434,28 @@
             align-items: center;
             justify-content: center;
             padding: 0 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #D5CDC2;
             border-radius: 8px;
             text-decoration: none;
-            color: #667eea;
+            color: #7E991E;
             font-weight: 500;
             transition: all 0.3s ease;
             background: white;
         }
         
         .pagination a:hover {
-            background: #667eea;
+            background: #7E991E;
             color: white;
-            border-color: #667eea;
+            border-color: #7E991E;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 8px rgba(126, 153, 30, 0.3);
         }
         
         .pagination span[aria-current="page"] {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #7E991E;
             color: white;
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            border-color: #7E991E;
+            box-shadow: 0 4px 12px rgba(126, 153, 30, 0.4);
         }
         
         .pagination span[aria-disabled="true"] {
@@ -406,87 +492,94 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
-            <h1>🛍️ MartPlace</h1>
             @if(Auth::check())
-                <p>
-                    @if(Auth::user()->isPlatform())
-                        Platform Admin
-                    @else
-                        Dashboard Penjual
-                    @endif
-                </p>
+                @if(Auth::user()->isPlatform())
+                    <div class="seller-info">
+                        <h1><img src="{{ asset('images/nestica-logo.png') }}" alt="Nestica" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none;">🪴</span> Nestica</h1>
+                        <p>Platform Admin</p>
+                    </div>
+                @else
+                    <div class="seller-avatar">
+                        <img src="https://via.placeholder.com/50/7E991E/FFFFFF?text={{ substr(Auth::user()->name, 0, 1) }}" alt="{{ Auth::user()->name }}">
+                    </div>
+                    <div class="seller-info">
+                        <h1>{{ Auth::user()->name }}</h1>
+                        <p style="color: #7E991E; font-weight: bold; font-size: 12px;">Active Seller</p>
+                    </div>
+                @endif
             @else
-                <p>Marketplace Indonesia</p>
+                <div class="seller-info">
+                    <h1><img src="{{ asset('images/nestica-logo.png') }}" alt="Nestica" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none;">🪴</span> Nestica</h1>
+                    <p>Marketplace Indonesia</p>
+                </div>
             @endif
         </div>
         <div class="sidebar-menu">
-            @if(Auth::check())
-            <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
-                <i>🛍️</i> Katalog Produk
-            </a>
-            <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
-                <i>⭐</i> Review Produk
-            </a>
-
-            <a href="/dashboard" class="menu-item {{ Request::is('dashboard') ? 'active' : '' }}">
-                <i>📊</i> Dashboard
-            </a>
-            
-            @if(Auth::user()->isPlatform())
+            @if(Auth::check() && Auth::user()->isPenjual())
+                <!-- Menu Section -->
+                <div class="menu-section">
+                    <div class="menu-section-title">Menu</div>
+                    <a href="/seller/dashboard" class="menu-item {{ Request::is('seller/dashboard*') ? 'active' : '' }}">
+                        Dashboard
+                    </a>
+                    <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
+                        Product Catalog
+                    </a>
+                </div>
+                
+                <!-- Tools Section -->
+                <div class="menu-section">
+                    <div class="menu-section-title">Tools</div>
+                    <a href="{{ route('seller.products') }}" class="menu-item {{ Request::is('seller/products') && !Request::is('seller/products/upload') ? 'active' : '' }}">
+                        Products
+                    </a>
+                    <a href="{{ route('seller.products.upload.form') }}" class="menu-item {{ Request::is('seller/products/upload') ? 'active' : '' }}">
+                        Upload Product
+                    </a>
+                    <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
+                        Product Reviews
+                    </a>
+                    <a href="/seller/reports" class="menu-item {{ Request::is('seller/reports*') ? 'active' : '' }}">
+                        Store Reports
+                    </a>
+                </div>
+            @elseif(Auth::check() && Auth::user()->isPlatform())
                 <!-- Menu untuk Platform Admin -->
+                <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
+                    Product Catalog
+                </a>
+                <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
+                    Product Reviews
+                </a>
+                <a href="/dashboard" class="menu-item {{ Request::is('dashboard') ? 'active' : '' }}">
+                    Dashboard
+                </a>
                 <a href="{{ route('admin.sellers.index') }}" class="menu-item {{ Request::is('admin/sellers*') && !Request::is('admin/sellers/report*') ? 'active' : '' }}">
-                    <i>👥</i> Kelola Penjual
+                    Manage Sellers
                 </a>
                 <a href="/dashboard/platform" class="menu-item {{ Request::is('dashboard/platform*') ? 'active' : '' }}">
-                    <i>📈</i> Analytics Platform
+                    Platform Analytics
                 </a>
                 <a href="/reports" class="menu-item {{ Request::is('reports*') ? 'active' : '' }}">
-                    <i>📄</i> Laporan Platform
+                    Platform Reports
                 </a>
-            @endif
-            
-            @if(Auth::user()->isPenjual())
-                <!-- Menu untuk Penjual -->
-                <a href="{{ route('seller.products.upload.form') }}" class="menu-item {{ Request::is('seller/products/upload') ? 'active' : '' }}">
-                    <i>➕</i> Upload Produk
-                </a>
-                <a href="/seller/dashboard" class="menu-item {{ Request::is('seller/dashboard*') ? 'active' : '' }}">
-                    <i>📊</i> Dashboard Toko
-                </a>
-                <a href="/seller/reports" class="menu-item {{ Request::is('seller/reports*') ? 'active' : '' }}">
-                    <i>📄</i> Laporan Toko
-                </a>
-            @endif
             @endif
         </div>
+        
+        @if(Auth::check())
+        <div class="sidebar-logout">
+            <form action="{{ url('/logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn-logout">Logout</button>
+            </form>
+        </div>
+        @endif
     </div>
     
     <div class="main-content">
-        <nav class="navbar">
-            <div class="navbar-title">
-                <h2>@yield('page-title', 'Dashboard')</h2>
-            </div>
-            <div class="navbar-right">
-                @if(Auth::check())
-                    <div class="user-info">
-                        <span>
-                            @if(Auth::user()->role === 'penjual' && Auth::user()->seller)
-                                {{ Auth::user()->seller->store_name }}
-                            @else
-                                {{ Auth::user()->name }}
-                            @endif
-                        </span>
-                    </div>
-                    <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="btn-logout">Logout</button>
-                    </form>
-                @else
-                    <a href="/register" style="padding: 10px 20px; background: white; color: #667eea; border: 2px solid #667eea; border-radius: 8px; text-decoration: none; font-weight: 500; margin-right: 10px;">Daftar</a>
-                    <a href="/login" style="padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 500;">Login</a>
-                @endif
-            </div>
-        </nav>
+        <div class="top-banner">
+            BRINGS WARMTH AND CHARACTER INTO EVERY CORNER OF YOUR HOME
+        </div>
         
         <div class="container">
             @yield('content')

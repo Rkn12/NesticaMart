@@ -49,6 +49,11 @@ Route::get('/api/provinces/{provinceCode}/regencies', [RegionController::class, 
 // ========================================
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
+        // Redirect seller to their dashboard
+        if (Auth::user()->isPenjual()) {
+            return redirect('/seller/dashboard');
+        }
+        // Platform admin goes to home
         return view('home');
     });
     
@@ -191,6 +196,21 @@ Route::prefix('api/seller/dashboard')->group(function () {
     // Dashboard penjual
     Route::get('/{seller_id}', [SellerDashboardController::class, 'index']);
 });
+
+// Seller Products API
+Route::get('api/seller/{seller_id}/products', [SellerDashboardController::class, 'getProducts']);
+
+// Seller Rating Distribution API
+Route::get('api/seller/{seller_id}/rating-distribution', [SellerDashboardController::class, 'getRatingDistribution']);
+
+// Seller All Products API
+Route::get('api/seller/{seller_id}/all-products', [SellerDashboardController::class, 'getAllProducts']);
+
+// Toggle Product Status API
+Route::post('api/seller/products/{product_id}/toggle-status', [SellerDashboardController::class, 'toggleProductStatus']);
+
+// Delete Product API
+Route::delete('api/seller/products/{product_id}', [SellerDashboardController::class, 'deleteProduct']);
 
 Route::prefix('seller-dashboard/{seller_id}')->group(function () {
     // Dashboard penjual
