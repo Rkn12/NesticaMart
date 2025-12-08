@@ -13,8 +13,6 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
         * {
             margin: 0;
             padding: 0;
@@ -22,21 +20,26 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #FDFBF0;
             color: #4A3B32;
+            padding-top: 28px;
         }
 
         /* Top Bar */
         .top-bar {
-            background-color: #8B9D3B;
-            color: #000;
+            background-color: #7E991E;
+            color: #483A2E;
             text-align: center;
-            padding: 8px 0;
-            font-size: 11px;
-            letter-spacing: 0.5px;
+            padding: 5px;
+            font-size: 10px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            font-weight: 600;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         /* Header */
@@ -465,7 +468,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             font-size: 14px;
             color: #4A3B32;
         }

@@ -49,7 +49,7 @@
         }
         
         .sidebar-header {
-            padding: 20px;
+            padding: 40px 20px 20px 20px;
             border-bottom: 1px solid #D5CDC2;
             display: flex;
             align-items: center;
@@ -163,18 +163,24 @@
         
         .top-banner {
             background: #7E991E;
-            color: white;
+            color: #483A2E;
             text-align: center;
-            padding: 8px;
-            font-size: 12px;
+            padding: 5px;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
         
         .main-content {
             margin-left: 240px;
             width: calc(100% - 240px);
             min-height: 100vh;
+            padding-top: 28px;
         }
         
         .navbar {
@@ -499,9 +505,6 @@
                         <p>Platform Admin</p>
                     </div>
                 @else
-                    <div class="seller-avatar">
-                        <img src="https://via.placeholder.com/50/7E991E/FFFFFF?text={{ substr(Auth::user()->name, 0, 1) }}" alt="{{ Auth::user()->name }}">
-                    </div>
                     <div class="seller-info">
                         <h1>{{ Auth::user()->name }}</h1>
                         <p style="color: #7E991E; font-weight: bold; font-size: 12px;">Active Seller</p>

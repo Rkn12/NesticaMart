@@ -10,8 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
         * {
             margin: 0;
             padding: 0;
@@ -19,25 +17,31 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #FDFBF0;
             color: #4A3B32;
         }
 
         /* Header Styles */
         .top-bar {
-            background-color: #7E991E; /* Olive green tone */
-            color: #FDFBF0;
+            background-color: #7E991E;
+            color: #483A2E;
             text-align: center;
-            padding: 5px 0;
+            padding: 5px;
             font-size: 10px;
             letter-spacing: 1px;
             text-transform: uppercase;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         .header-main {
             background-color: #FDFBF0;
             padding: 20px 50px;
+            margin-top: 28px;
         }
 
         .logo {
@@ -55,7 +59,8 @@
             height: 150px;
             display: flex;
             align-items: center;
-            padding-left: 50px;
+            padding-left: 80px;
+            padding-top: 20px;
             position: relative;
             overflow: hidden;
             color: #fff;
@@ -68,15 +73,21 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.3);
         }
 
         .banner h1 {
-            font-size: 48px;
+            font-size: 36px;
+            font-weight: 700;
             color: #e3e3e3ff;
             position: relative;
             z-index: 1;
-            text-shadow: 3px 3px 4px rgba(0,0,0,1);
+            text-shadow: 
+                -1px -1px 0 #493A2E,
+                1px -1px 0 #493A2E,
+                -1px 1px 0 #493A2E,
+                1px 1px 0 #493A2E,
+                2px 2px 4px rgba(0,0,0,0.7);
         }
 
         /* Form Styles */
@@ -187,9 +198,17 @@
             color: #FDFBF0;
         }
 
+        .btn-primary:hover {
+            background-color: #3a2e27;
+        }
+
         .btn-secondary {
             background-color: #4A3B32;
             color: #FDFBF0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #3a2e27;
         }
 
         /* Footer */
@@ -391,7 +410,7 @@
 
             <div class="btn-group">
                 <button type="submit" class="btn btn-primary">Apply</button>
-                <a href="{{ url('/') }}" class="btn btn-secondary" style="text-decoration: none; text-align: center; padding-top: 12px;">Cancel</a>
+                <a href="{{ url('/login') }}" class="btn btn-secondary" style="text-decoration: none; text-align: center; padding-top: 12px;">Cancel</a>
             </div>
 
         </form>

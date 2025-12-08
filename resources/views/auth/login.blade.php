@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Nestica</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +12,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #FDFBF0;
             color: #4A3B32;
             min-height: 100vh;
@@ -24,18 +22,24 @@
 
         /* Header Styles */
         .top-bar {
-            background-color: #7E991E; /* Olive green tone */
-            color: #FDFBF0;
+            background-color: #7E991E;
+            color: #483A2E;
             text-align: center;
-            padding: 5px 0;
+            padding: 5px;
             font-size: 10px;
             letter-spacing: 1px;
             text-transform: uppercase;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         .header-main {
             background-color: #FDFBF0;
             padding: 20px 50px;
+            margin-top: 28px;
         }
 
         .logo {
@@ -46,14 +50,14 @@
 
         .banner {
             background-color: #A5A58D;
-            /* Ganti 'images/banner.jpg' dengan nama file gambar Anda yang ada di folder public/images */
             background-image: url("{{ asset('images/banner.PNG') }}");
-            background-size: cover; /* Mengatur gambar agar memenuhi area */
-            background-position: center; /* Mengatur posisi gambar di tengah */
+            background-size: cover;
+            background-position: center;
             height: 150px;
             display: flex;
             align-items: center;
-            padding-left: 50px;
+            padding-left: 90px;
+            padding-top: 40px;
             position: relative;
             overflow: hidden;
         }
@@ -65,21 +69,50 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.3);
         }
 
         .banner h1 {
-            font-size: 48px;
+            font-size: 36px;
+            font-weight: 700;
             color: #e3e3e3ff;
             position: relative;
             z-index: 1;
-            text-shadow: 3px 3px 4px rgba(0,0,0,1);
+            text-shadow: 
+                -1px -1px 0 #493A2E,
+                1px -1px 0 #493A2E,
+                -1px 1px 0 #493A2E,
+                1px 1px 0 #493A2E,
+                2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        /* 🔥 BACK BUTTON (LEFT) */
+        .back-container {
+            width: 100%;
+            text-align: left;       /* RATA KIRI */
+            margin: 20px 0 10px 0;
+            padding-left: 50px;     /* Jarak kiri */
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #4A3B32;
+            color: #FDFBF0;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #3a2e27;
         }
 
         /* Content Styles */
         .container {
             max-width: 1200px;
-            margin: 60px auto;
+            margin: 20px auto 60px auto;
             padding: 0 50px;
             display: flex;
             gap: 100px;
@@ -201,8 +234,12 @@
     </div>
 
     <div class="banner">
-        
         <h1>Login</h1>
+    </div>
+
+    <!-- 🔥 BACK BUTTON (LEFT) -->
+    <div class="back-container">
+        <a href="{{ url('/') }}" class="back-btn">← Back</a>
     </div>
 
     <div class="container">
