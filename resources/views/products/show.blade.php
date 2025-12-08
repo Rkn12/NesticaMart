@@ -60,20 +60,14 @@
 
         .logo {
             display: flex;
-            flex-direction: column;
             align-items: center;
             text-decoration: none;
             color: #4A3B32;
         }
 
-        .logo i {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .logo span {
-            font-weight: 800;
-            font-size: 14px;
+        .logo img {
+            height: 80px;
+            width: 80px;
         }
 
         .nav-links {
@@ -177,20 +171,260 @@
 
         .back-button {
             display: inline-block;
-            padding: 10px 20px;
-            background: #4A3B32;
-            color: #fff;
+            padding: 0;
+            background: transparent;
+            color: #483A2E;
             text-decoration: none;
-            border-radius: 4px;
             font-weight: 600;
             margin-bottom: 30px;
-            font-size: 14px;
+            margin-top: -10px;
+            font-size: 15px;
         }
 
         .back-button:hover {
-            opacity: 0.9;
+            text-decoration: underline;
         }
 
+        /* Large Centered Product Image - Landscape */
+        .product-image-large {
+            width: 100%;
+            max-width: 800px;
+            height: 340px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .product-image-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Product Name - Centered */
+        .product-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #4A3B32;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Product Info Row - Flex Layout */
+        .product-info-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+        }
+
+        /* Left Info Container */
+        .left-info {
+            flex: 1;
+        }
+
+        /* Category Badge - Green Border */
+        .category-badge {
+            padding: 6px 16px;
+            border: 2px solid #7E991E;
+            border-radius: 20px;
+            color: #7E991E;
+            font-weight: 700;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        /* Price and Stock Section */
+        .price-stock-section {
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #483A2E;
+            margin-bottom: 7px;
+        }
+
+        .product-stock {
+            font-size: 12px;
+            color: #7E991E;
+            font-weight: 600;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .review-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 3px;
+            font-size: 16px;
+        }
+
+        .stars i.filled {
+            color: #EFCD77;
+        }
+
+        .stars i {
+            color: #E5E5E5;
+        }
+
+        .review-count {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .review-link {
+            color: #666;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .review-link:hover {
+            color: #7E991E;
+        }
+
+        /* Store Info Inline - below reviews */
+        .store-info-inline {
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .store-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #7E991E;
+            margin-bottom: 5px;
+        }
+
+        .store-location {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Main Description Section */
+        .description-section {
+            margin-bottom: -15px;
+            margin-top: -20px;
+        }
+
+        .description-section p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #483A2E;
+        }
+
+        /* Details & Material Section */
+        .details-material-section {
+            background: #FBFDF0;
+            padding: 40px 0;
+            border-radius: 10px;
+            margin-bottom: -20px;
+            margin-top: -20px;
+        }
+
+        .details-material-section h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #4A3B32;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        /* Details List */
+        .details-list {
+            margin-bottom: 40px;
+        }
+
+        .details-list h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #4A3B32;
+            margin-bottom: 5px;
+        }
+
+        .details-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .details-list li {
+            font-size: 15px;
+            color: #483A2E;
+            padding: 4px 0;
+        }
+
+        /* Material Section */
+        .material-section {
+        }
+
+        .material-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #4A3B32;
+            margin-bottom: 10px;
+            margin-top: -25px;
+            text-align: center;
+        }
+
+        .material-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .material-photo-container {
+            flex-shrink: 0;
+        }
+
+        .material-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .material-text {
+            flex: 1;
+            text-align: right;
+        }
+
+        .material-description {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #483A2E;
+            margin-bottom: -20px;
+        }
+
+        /* Material Photos - Old */
+        .material-photos {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* OLD STYLES - KEEP FOR REVIEWS */
         .product-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -216,13 +450,6 @@
             color: #4A3B32;
         }
 
-        .product-price {
-            font-size: 28px;
-            font-weight: 800;
-            color: #8B9D3B;
-            margin-bottom: 20px;
-        }
-
         .product-meta {
             display: flex;
             gap: 20px;
@@ -245,14 +472,6 @@
             align-items: center;
             gap: 8px;
             font-size: 14px;
-        }
-
-        .stars {
-            color: #E5E5E5;
-        }
-
-        .stars .filled {
-            color: #F4D03F;
         }
 
         .product-info {
@@ -283,8 +502,8 @@
             color: #666;
         }
 
-        /* Reviews Section */
-        .reviews-section {
+        /* Reviews Section Wrapper */
+        .reviews-section-wrapper {
             margin-top: 60px;
             padding-top: 40px;
             border-top: 2px solid #eee;
@@ -298,8 +517,8 @@
         }
 
         .reviews-header h2 {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 20px;
+            font-weight: 700;
             color: #4A3B32;
         }
 
@@ -338,18 +557,18 @@
         }
 
         .reviewer-name {
-            font-weight: 700;
-            color: #333;
+            font-weight: 600;
+            color: #4A3B32;
             font-size: 16px;
         }
 
         .review-rating {
             font-size: 14px;
-            color: #F4D03F;
+            color: #EFCD77;
         }
 
         .review-comment {
-            color: #555;
+            color: #483A2E;
             line-height: 1.6;
             margin-bottom: 10px;
         }
@@ -624,8 +843,7 @@
     <header>
         <div class="header-left">
             <a href="/" class="logo">
-                <i class="fas fa-couch"></i>
-                <span>Nestica</span>
+                <img src="{{ asset('images/nestica-logo.png') }}" alt="Nestica Logo">
             </a>
             
         </div>
@@ -683,86 +901,126 @@
     </header>
 
     <div class="container">
-        <a href="/products" class="back-button">← Kembali ke Katalog</a>
+        <a href="/products" class="back-button">← Back</a>
 
-        <div class="product-section">
-            <div class="product-image">
-                {{ $product->name[0] }}
-            </div>
+        <!-- Product Image - Large Centered -->
+        <div class="product-image-large">
+            @php
+                $firstImage = $product->images->first();
+                $imageUrl = $firstImage ? asset('storage/' . $firstImage->image_url) : 'https://via.placeholder.com/800x400/D5CDC2/483A2E?text=No+Image';
+            @endphp
+            <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
+        </div>
 
-            <div class="product-details">
-                <h1>{{ $product->name }}</h1>
-                <div class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+        <!-- Product Name -->
+        <h1 class="product-name">{{ $product->name }}</h1>
 
-                <div class="product-meta">
-                    <span class="badge">{{ $product->condition === 'new' ? 'BARU' : 'BEKAS' }}</span>
-                    
-                    <div class="rating-display">
-                        @php
-                            $avgRating = $product->reviews->avg('rating') ?? 0;
-                            $reviewCount = $product->reviews->count();
-                            $fullStars = floor($avgRating);
-                            $hasHalf = ($avgRating - $fullStars) >= 0.5;
-                        @endphp
-                        <div class="stars">
-                            @for($i = 0; $i < $fullStars; $i++)
-                                <i class="fas fa-star filled"></i>
-                            @endfor
-                            @if($hasHalf)
-                                <i class="fas fa-star-half-stroke filled"></i>
-                            @endif
-                            @for($i = 0; $i < (5 - $fullStars - ($hasHalf ? 1 : 0)); $i++)
-                                <i class="fas fa-star"></i>
-                            @endfor
-                        </div>
-                        <span>{{ $reviewCount }} Reviews</span>
-                    </div>
-
-                    <div>
-                        @php
-                            $sold = $product->sold_count ?? 0;
-                            $soldText = $sold >= 1000 ? floor($sold / 1000) . 'rb+' : $sold;
-                        @endphp
-                        <strong>{{ $soldText }} Terjual</strong>
-                    </div>
+        <!-- Product Info Row -->
+        <div class="product-info-row">
+            <!-- Left: Category and Price/Stock -->
+            <div class="left-info">
+                <!-- Category Badge -->
+                <div class="category-badge">
+                    {{ $product->category->name ?? 'Uncategorized' }}
                 </div>
 
-                <div class="product-info">
-                    <h3>Deskripsi Produk</h3>
-                    <p>{{ $product->description }}</p>
+                <!-- Price and Stock -->
+                <div class="price-stock-section">
+                    <div class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                    <div class="product-stock">Stock: {{ $product->stock }}</div>
+                </div>
+            </div>
 
-                    <h3>Informasi Produk</h3>
-                    <table>
-                        <tr>
-                            <td><strong>Kategori:</strong></td>
-                            <td>{{ $product->category->name ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Berat:</strong></td>
-                            <td>{{ $product->weight ?? '-' }} gram</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Kondisi:</strong></td>
-                            <td>{{ $product->condition === 'new' ? 'Baru' : 'Bekas' }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Lokasi:</strong></td>
-                            <td>{{ $product->location_city }}, {{ $product->location_province }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Stok:</strong></td>
-                            <td>{{ $product->stock }}</td>
-                        </tr>
-                    </table>
-
-                    <h3>Penjual</h3>
-                    <p><strong>{{ $product->seller->store_name ?? 'Unknown' }}</strong></p>
-                    <p>{{ $product->seller->city ?? '' }}, {{ $product->seller->province ?? '' }}</p>
+            <!-- Reviews -->
+            <div class="reviews-section">
+                @php
+                    $avgRating = $product->reviews->avg('rating') ?? 0;
+                    $reviewCount = $product->reviews->count();
+                    $fullStars = floor($avgRating);
+                    $hasHalf = ($avgRating - $fullStars) >= 0.5;
+                @endphp
+                <div class="review-row">
+                    <div class="stars">
+                        @for($i = 0; $i < $fullStars; $i++)
+                            <i class="fas fa-star filled"></i>
+                        @endfor
+                        @if($hasHalf)
+                            <i class="fas fa-star-half-stroke filled"></i>
+                        @endif
+                        @for($i = 0; $i < (5 - $fullStars - ($hasHalf ? 1 : 0)); $i++)
+                            <i class="fas fa-star"></i>
+                        @endfor
+                    </div>
+                    <span class="review-count">{{ number_format($avgRating, 1) }} (<a href="#reviews-section" class="review-link">{{ $reviewCount }} reviews</a>)</span>
+                </div>
+                
+                <!-- Store Info below reviews -->
+                <div class="store-info-inline">
+                    <div class="store-name">{{ $product->seller->store_name ?? 'Toko' }}</div>
+                    <div class="store-location">{{ $product->location_city }}, {{ $product->location_province }}</div>
                 </div>
             </div>
         </div>
 
-        <div class="reviews-section">
+        <!-- Main Description -->
+        <div class="description-section">
+            <p>{{ $product->description }}</p>
+        </div>
+
+        <!-- Details & Material Description Section -->
+        <div class="details-material-section">
+            <h2>Details & Material Description</h2>
+            
+            <!-- Details List -->
+            <div class="details-list">
+                <ul>
+                    @if($product->merek)
+                        <li>Merek: {{ $product->merek }}</li>
+                    @endif
+                    @if($product->bahan)
+                        <li>Material: {{ $product->bahan }}</li>
+                    @endif
+                    @if($product->origin)
+                        <li>Origin: {{ $product->origin }}</li>
+                    @endif
+                    @if($product->garansi)
+                        <li>Garansi: {{ $product->garansi }}</li>
+                    @endif
+                    @if($product->dimensi && is_array($product->dimensi))
+                        <li>Dimensi: {{ implode(' x ', $product->dimensi) }} cm</li>
+                    @endif
+                    @if($product->spesifikasi && is_array($product->spesifikasi))
+                        @foreach($product->spesifikasi as $spec)
+                            <li>{{ $spec }}</li>
+                        @endforeach
+                    @endif
+                </ul>
+            </div>
+
+            <!-- Material Section -->
+            <div class="material-section">
+                <!-- Material Title - Centered at top -->
+                <h3 class="material-title">{{ $product->material_title ?? 'Material Information' }}</h3>
+                
+                <!-- Material Content - Photo and Description side by side -->
+                <div class="material-content">
+                    <!-- Material Photo - Left -->
+                    <div class="material-photo-container">
+                        <img src="https://via.placeholder.com/200x200/D5CDC2/483A2E?text=Material" alt="Material" class="material-photo">
+                    </div>
+                    
+                    <!-- Material Description - Right -->
+                    <div class="material-text">
+                        <p class="material-description">
+                            {{ $product->material_description ?? 'High-quality materials used in manufacturing this product to ensure durability and longevity.' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section-wrapper" id="reviews-section">
             <div class="reviews-header">
                 <div>
                     <h2 style="margin-bottom: 10px;">Reviews</h2>
@@ -773,17 +1031,17 @@
                         $hasHalf = ($avgRating - $fullStars) >= 0.5;
                     @endphp
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="font-size: 32px; font-weight: 800; color: #4A3B32;">{{ number_format($avgRating, 1) }}</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #4A3B32;">{{ number_format($avgRating, 1) }}</div>
                         <div>
                             <div class="stars" style="font-size: 20px; margin-bottom: 5px;">
                                 @for($i = 0; $i < $fullStars; $i++)
-                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star" style="color: #EFCD77;"></i>
                                 @endfor
                                 @if($hasHalf)
-                                    <i class="fas fa-star-half-stroke filled"></i>
+                                    <i class="fas fa-star-half-stroke" style="color: #EFCD77;"></i>
                                 @endif
                                 @for($i = 0; $i < (5 - $fullStars - ($hasHalf ? 1 : 0)); $i++)
-                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star" style="color: #E5E5E5;"></i>
                                 @endfor
                             </div>
                             <div style="font-size: 14px; color: #999;">Based on {{ $reviewCount }} reviews</div>
@@ -799,17 +1057,17 @@
                 <div class="review-item">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
                         <div style="flex: 1;">
-                            <div class="review-rating" style="font-size: 24px; margin-bottom: 10px;">
+                            <div class="review-rating" style="font-size: 18px; margin-bottom: 10px;">
                                 @for($i = 1; $i <= 5; $i++)
                                     @if($i <= $review->rating)
-                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star" style="color: #EFCD77;"></i>
                                     @else
                                         <i class="fas fa-star" style="color: #E5E5E5;"></i>
                                     @endif
                                 @endfor
                             </div>
-                            <h4 style="color: #4A3B32; font-size: 18px; font-weight: 700; margin-bottom: 10px;">{{ $review->review_title ?? 'Tanpa Judul' }}</h4>
-                            <p class="review-comment" style="color: #555; line-height: 1.7; margin-bottom: 15px; font-size: 15px;">{{ $review->comment }}</p>
+                            <h4 style="color: #4A3B32; font-size: 16px; font-weight: 600; margin-bottom: 10px;">{{ $review->review_title ?? 'Tanpa Judul' }}</h4>
+                            <p class="review-comment" style="color: #483A2E; line-height: 1.7; margin-bottom: 15px; font-size: 15px;">{{ $review->comment }}</p>
                             <p style="color: #8B9D3B; font-size: 13px; font-weight: 600;">{{ $review->reviewer_name }}, {{ $review->reviewer_province ?? 'Unknown' }}</p>
                         </div>
                         <div style="font-size: 13px; color: #999; text-align: right; white-space: nowrap; margin-left: 20px;">

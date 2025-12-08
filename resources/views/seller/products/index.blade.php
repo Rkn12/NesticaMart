@@ -3,6 +3,25 @@
 @section('title', 'My Products - Nestica')
 
 @section('content')
+<!-- Success Notification -->
+@if(session('success'))
+<div id="success-notification" style="position: fixed; top: 20px; right: 20px; background: #7E991E; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; opacity: 1; transition: opacity 0.3s ease;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 6L9 17l-5-5"/>
+    </svg>
+    {{ session('success') }}
+</div>
+<script>
+    setTimeout(() => {
+        const notification = document.getElementById('success-notification');
+        if (notification) {
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 3000);
+</script>
+@endif
+
 <style>
     .products-header {
         display: flex;

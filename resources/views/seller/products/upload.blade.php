@@ -218,6 +218,7 @@
                             <div class="upload-text">Browse your image here</div>
                             <input type="file" id="product-image" name="images[]" class="upload-input" accept="image/*" multiple required>
                         </label>
+                        <div id="product-preview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;"></div>
                     </div>
                 </div>
                 
@@ -226,8 +227,13 @@
                     <h3 class="section-title">Details & Material Description</h3>
                     
                     <div class="form-group">
-                        <label class="form-label">Details</label>
-                        <input type="text" name="details" class="form-input" placeholder="Enter product details">
+                        <label class="form-label">Material</label>
+                        <input type="text" name="bahan" class="form-input" placeholder="e.g., Wood, Metal, Plastic">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Origin</label>
+                        <input type="text" name="origin" class="form-input" placeholder="e.g., chestnut (Castanea sativa) from Slovenia">
                     </div>
                     
                     <div class="form-group">
@@ -251,6 +257,7 @@
                             <div class="upload-text">Browse your image here</div>
                             <input type="file" id="material-image" name="material_image" class="upload-input" accept="image/*">
                         </label>
+                        <div id="material-preview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;"></div>
                     </div>
                 </div>
             </div>
@@ -259,6 +266,74 @@
         <button type="submit" class="btn-submit">Add Product</button>
     </form>
 </div>
+
+<!-- Success Notification -->
+@if(session('success'))
+<div id="success-notification" style="position: fixed; top: 20px; right: 20px; background: #7E991E; color: white; padding: 20px 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; font-size: 14px; font-weight: 600; max-width: 400px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <svg style="width: 24px; height: 24px; fill: white;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+        <span>{{ session('success') }}</span>
+    </div>
+</div>
+<script>
+    setTimeout(function() {
+        var notification = document.getElementById('success-notification');
+        if (notification) {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.5s';
+            setTimeout(function() { notification.remove(); }, 500);
+        }
+    }, 3000);
+</script>
+@endif
+
+<script>
+// Product Image Preview
+document.getElementById('product-image').addEventListener('change', function(e) {
+    const preview = document.getElementById('product-preview');
+    preview.innerHTML = '';
+    
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '100%';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '8px';
+            img.style.border = '2px solid #7E991E';
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    });
+});
+
+// Material image preview
+document.getElementById('material-image').addEventListener('change', function(e) {
+    const preview = document.getElementById('material-preview');
+    preview.innerHTML = '';
+    
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '100%';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '8px';
+            img.style.border = '2px solid #7E991E';
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
 
 <!-- Footer -->
 <div style="margin-left: -30px; margin-right: -30px; margin-bottom: -30px; margin-top: 120px;">

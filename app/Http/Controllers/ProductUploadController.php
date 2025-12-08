@@ -49,12 +49,6 @@ class ProductUploadController extends Controller
             // Pricing & Stock
             'price' => 'required|numeric|min:100',
             'stock' => 'required|integer|min:1',
-            'berat' => 'required|numeric|min:0.1', // Ganti dari weight ke berat
-            
-            // Condition & Location
-            'kondisi' => 'required|in:baru,bekas', // Ganti dari condition ke kondisi
-            'location_province' => 'required|string|max:100',
-            'location_city' => 'required|string|max:100',
             
             // Product Images
             'images' => 'required|array|min:1|max:5',
@@ -66,15 +60,16 @@ class ProductUploadController extends Controller
             'dimensi_panjang' => 'nullable|numeric|min:0',
             'dimensi_lebar' => 'nullable|numeric|min:0',
             'dimensi_tinggi' => 'nullable|numeric|min:0',
-            'bahan' => 'nullable|string|max:100',
+            'bahan' => 'nullable|string|max:200',
+            'origin' => 'nullable|string|max:300',
             'spesifikasi' => 'nullable|array',
+            'material_title' => 'nullable|string|max:500',
+            'material_description' => 'nullable|string|max:2000',
         ], [
             'name.required' => 'Nama produk wajib diisi',
             'description.min' => 'Deskripsi produk minimal 50 karakter',
             'price.min' => 'Harga minimal Rp 100',
             'stock.min' => 'Stok minimal 1 buah',
-            'berat.required' => 'Berat produk wajib diisi',
-            'kondisi.required' => 'Kondisi produk wajib dipilih',
             'images.required' => 'Minimal 1 gambar produk harus diupload',
             'images.max' => 'Maksimal 5 gambar produk',
             'images.*.image' => 'File harus berupa gambar',
@@ -117,10 +112,10 @@ class ProductUploadController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
-            'berat' => $request->berat,
-            'kondisi' => $request->kondisi,
-            'location_province' => $request->location_province,
-            'location_city' => $request->location_city,
+            'berat' => 1.0, // Default weight
+            'kondisi' => 'baru', // Default new condition
+            'location_province' => $seller->province ?? 'Unknown',
+            'location_city' => $seller->country ?? 'Unknown',
             'sold_count' => 0,
             'average_rating' => 0,
             // Field tambahan dengan nama Indonesia
@@ -128,7 +123,10 @@ class ProductUploadController extends Controller
             'garansi' => $request->garansi,
             'dimensi' => $dimensi,
             'bahan' => $request->bahan,
+            'origin' => $request->origin,
             'spesifikasi' => $spesifikasi,
+            'material_title' => $request->material_title,
+            'material_description' => $request->material_description,
         ]);
 
         // Upload and save product images
@@ -138,14 +136,13 @@ class ProductUploadController extends Controller
                 
                 ProductImage::create([
                     'product_id' => $product->id,
-                    'image_path' => $path,
-                    'is_main' => $index === 0, // First image is main image
+                    'image_url' => $path,
                 ]);
             }
         }
 
-        return redirect('/seller/products')->with('success', 
-            'Produk berhasil diupload! Produk Anda akan ditinjau dalam 1-2 hari kerja.');
+        return redirect()->back()->with('success', 
+            'Produk berhasil diupload!');
     }
 
     /**

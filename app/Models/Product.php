@@ -27,9 +27,12 @@ class Product extends Model
         'garansi',
         'dimensi',
         'bahan',
+        'origin',
         'berat',
         'kondisi',
         'spesifikasi',
+        'material_title',
+        'material_description',
     ];
 
     protected $casts = [

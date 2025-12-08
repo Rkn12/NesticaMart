@@ -89,24 +89,23 @@
         /* 🔥 BACK BUTTON (LEFT) */
         .back-container {
             width: 100%;
-            text-align: left;       /* RATA KIRI */
+            text-align: left;
             margin: 20px 0 10px 0;
-            padding-left: 50px;     /* Jarak kiri */
+            padding-left: 50px;
         }
 
         .back-btn {
             display: inline-block;
-            padding: 10px 25px;
-            background-color: #4A3B32;
-            color: #FDFBF0;
+            padding: 0;
+            background: transparent;
+            color: #483A2E;
             text-decoration: none;
             font-size: 16px;
-            border-radius: 4px;
-            transition: background 0.2s;
+            font-weight: 600;
         }
 
         .back-btn:hover {
-            background-color: #3a2e27;
+            text-decoration: underline;
         }
 
         /* Content Styles */

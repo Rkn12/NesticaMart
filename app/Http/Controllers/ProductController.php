@@ -83,7 +83,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['seller', 'category', 'reviews'])
+        $query = Product::with(['seller', 'category', 'reviews', 'images'])
             // hanya tampilkan produk dari seller yang sudah approved
             ->whereHas('seller', function($q) {
                 $q->where('status', 'approved');

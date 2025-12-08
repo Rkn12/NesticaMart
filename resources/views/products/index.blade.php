@@ -60,20 +60,14 @@
 
         .logo {
             display: flex;
-            flex-direction: column;
             align-items: center;
             text-decoration: none;
             color: #4A3B32;
         }
-        
+
         .logo img {
-            height: 40px;
-        }
-        
-        .logo span {
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: -0.5px;
+            height: 80px;
+            width: 80px;
         }
 
         .nav-links {
@@ -186,8 +180,9 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 30px;
+            margin-bottom: 40px;
         }
 
         .product-card {
@@ -201,13 +196,22 @@
             transform: translateY(-5px);
         }
 
-        .product-image {
+        .product-image-container {
             width: 100%;
             height: 250px;
-            object-fit: cover;
-            border-radius: 0;
+            background-color: #E8E8E0;
             margin-bottom: 15px;
-            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .product-location {
@@ -325,9 +329,7 @@
     <header>
         <div class="header-left">
             <a href="/" class="logo">
-                <!-- Placeholder for logo icon -->
-                <i class="fas fa-couch" style="font-size: 24px; margin-bottom: 5px;"></i>
-                <span>Nestica</span>
+                <img src="{{ asset('images/nestica-logo.png') }}" alt="Nestica Logo">
             </a>
             
             
@@ -409,7 +411,13 @@
                     </div>
                     
                     <!-- Product Image -->
-                    <img src="{{ $product->image_url ?? 'https://images.unsplash.com/photo-1550226891-ef816aed4a98?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80' }}" alt="{{ $product->name }}" class="product-image">
+                    @php
+                        $firstImage = $product->images->first();
+                        $imageUrl = $firstImage ? asset('storage/' . $firstImage->image_url) : 'https://via.placeholder.com/400x250/D5CDC2/483A2E?text=No+Image';
+                    @endphp
+                    <div class="product-image-container">
+                        <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="product-image">
+                    </div>
                     
                     <!-- Title -->
                     <h3 class="product-title">{{ $product->name }}</h3>

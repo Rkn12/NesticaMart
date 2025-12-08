@@ -36,6 +36,8 @@ class ProdukSeeder extends Seeder
             'condition' => 'new',
             'location_province' => 'DKI Jakarta',
             'location_city' => 'Jakarta Pusat',
+            'material_title' => 'Suitable for utilisation outdoors on a temporary or seasonal basis, following care instructions.',
+            'material_description' => 'After prolonged exposure to the elements, clean and store away in a dry, sheltered place to ensure lasting use and avoid any deterioration in appearance. Whether selected as an elegant wooden object for the living room, as a robust toy made of recycled plastic for a child\'s bedroom or outdoor use, or as a small decorative animal figure: the friendly animal with its proudly prominent ears will bring delight to children and parents alike.',
         ]);
 
         Product::create([

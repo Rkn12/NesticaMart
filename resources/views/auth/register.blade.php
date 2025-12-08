@@ -22,7 +22,6 @@
             color: #4A3B32;
         }
 
-        /* Header Styles */
         .top-bar {
             background-color: #7E991E;
             color: #483A2E;

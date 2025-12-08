@@ -526,7 +526,7 @@
                         Dashboard
                     </a>
                     <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
-                        Product Catalog
+                        Homepage
                     </a>
                 </div>
                 
@@ -549,7 +549,7 @@
             @elseif(Auth::check() && Auth::user()->isPlatform())
                 <!-- Menu untuk Platform Admin -->
                 <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
-                    Product Catalog
+                    Homepage
                 </a>
                 <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
                     Product Reviews
