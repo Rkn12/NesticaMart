@@ -199,7 +199,7 @@
         .product-image-container {
             width: 100%;
             height: 250px;
-            background-color: #E8E8E0;
+            background-color: #FBFDF0;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -210,7 +210,7 @@
         .product-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
         }
 
@@ -413,7 +413,15 @@
                     <!-- Product Image -->
                     @php
                         $firstImage = $product->images->first();
-                        $imageUrl = $firstImage ? asset('storage/' . $firstImage->image_url) : 'https://via.placeholder.com/400x250/D5CDC2/483A2E?text=No+Image';
+                        $imageUrl = 'https://via.placeholder.com/400x250/D5CDC2/483A2E?text=No+Image';
+                        
+                        if ($firstImage) {
+                            if (Str::startsWith($firstImage->image_url, 'images/')) {
+                                $imageUrl = asset($firstImage->image_url);
+                            } else {
+                                $imageUrl = asset('storage/' . $firstImage->image_url);
+                            }
+                        }
                     @endphp
                     <div class="product-image-container">
                         <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="product-image">

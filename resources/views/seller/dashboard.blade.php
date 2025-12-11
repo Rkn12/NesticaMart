@@ -192,8 +192,9 @@
     .product-image {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         border-radius: 5px;
+        background-color: #FBFDF0;
     }
     
     .product-info-grid {
@@ -495,9 +496,15 @@ if (!sellerId) {
             if (data.success && data.data.length > 0) {
                 container.innerHTML = '';
                 data.data.forEach(product => {
-                    const imageUrl = (product.images && product.images.length > 0) 
-                        ? `/storage/${product.images[0].image_url}` 
-                        : 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
+                    let imageUrl = 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
+                    if (product.images && product.images.length > 0) {
+                        const imgPath = product.images[0].image_url;
+                        if (imgPath.startsWith('images/')) {
+                            imageUrl = `/${imgPath}`;
+                        } else {
+                            imageUrl = `/storage/${imgPath}`;
+                        }
+                    }
                     
                     const rating = parseFloat(product.average_rating) || 0;
                     const reviewCount = parseInt(product.review_count) || 0;

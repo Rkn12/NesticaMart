@@ -22,14 +22,10 @@ class Product extends Model
         'location_province',
         'location_city',
         'average_rating',
-        // Field baru sesuai SRS-MartPlace-03
-        'berat',
-        'kondisi',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'berat' => 'decimal:2',
         'average_rating' => 'decimal:1',
     ];
 

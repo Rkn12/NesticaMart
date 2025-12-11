@@ -190,15 +190,45 @@
             width: 100%;
             max-width: 800px;
             height: 340px;
-            margin: 0 auto 30px auto;
+            margin: 0 auto 10px auto;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 10px;
             overflow: hidden;
+            background-color: #FBFDF0;
         }
 
         .product-image-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Thumbnail Gallery */
+        .product-thumbnails {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail-item {
+            width: 60px;
+            height: 60px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            overflow: hidden;
+            background-color: #FBFDF0;
+        }
+
+        .thumbnail-item.active {
+            border-color: #7E991E;
+        }
+
+        .thumbnail-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -330,6 +360,8 @@
             font-size: 15px;
             line-height: 1.8;
             color: #483A2E;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
 
         /* Details & Material Section */
@@ -906,11 +938,38 @@
         <!-- Product Image - Large Centered -->
         <div class="product-image-large">
             @php
-                $firstImage = $product->images->first();
-                $imageUrl = $firstImage ? asset('storage/' . $firstImage->image_url) : 'https://via.placeholder.com/800x400/D5CDC2/483A2E?text=No+Image';
+                $images = $product->images;
+                $firstImage = $images->first();
+                $mainImageUrl = 'https://via.placeholder.com/800x400/D5CDC2/483A2E?text=No+Image';
+                
+                if ($firstImage) {
+                    if (Str::startsWith($firstImage->image_url, 'images/')) {
+                        $mainImageUrl = asset($firstImage->image_url);
+                    } else {
+                        $mainImageUrl = asset('storage/' . $firstImage->image_url);
+                    }
+                }
             @endphp
-            <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
+            <img id="mainProductImage" src="{{ $mainImageUrl }}" alt="{{ $product->name }}">
         </div>
+
+        <!-- Thumbnails -->
+        @if($images->count() > 1)
+        <div class="product-thumbnails">
+            @foreach($images as $index => $image)
+                @php
+                    if (Str::startsWith($image->image_url, 'images/')) {
+                        $thumbUrl = asset($image->image_url);
+                    } else {
+                        $thumbUrl = asset('storage/' . $image->image_url);
+                    }
+                @endphp
+                <div class="thumbnail-item {{ $index === 0 ? 'active' : '' }}" onclick="changeImage(this, '{{ $thumbUrl }}')">
+                    <img src="{{ $thumbUrl }}" alt="Thumbnail {{ $index + 1 }}">
+                </div>
+            @endforeach
+        </div>
+        @endif
 
         <!-- Product Name -->
         <h1 class="product-name">{{ $product->name }}</h1>
@@ -1132,6 +1191,17 @@
     </footer>
 
     <script>
+        function changeImage(element, src) {
+            // Update main image
+            document.getElementById('mainProductImage').src = src;
+            
+            // Update active class
+            document.querySelectorAll('.thumbnail-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
         $(document).ready(function() {
             $('.select2').select2({
                 minimumResultsForSearch: 0

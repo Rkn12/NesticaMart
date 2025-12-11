@@ -189,6 +189,16 @@
 <div class="upload-container">
     <h1 class="page-title">Upload Product</h1>
     
+    @if ($errors->any())
+        <div style="background-color: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+            <ul style="list-style-type: disc; padding-left: 1.5rem; margin: 0;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('seller.products.upload') }}" method="POST" enctype="multipart/form-data">
         @csrf
         

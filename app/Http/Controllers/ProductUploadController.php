@@ -79,8 +79,8 @@ class ProductUploadController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
-            'berat' => 1.0, // Default weight as fallback
-            'kondisi' => 'baru', // Default new condition
+            'weight' => 1000, // Default weight (1kg)
+            'condition' => 'new', // Default new condition
             'location_province' => $seller->province ?? 'Unknown',
             'location_city' => $seller->city ?? 'Unknown',
             'sold_count' => 0,

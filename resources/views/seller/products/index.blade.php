@@ -123,8 +123,9 @@
     .product-image {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         border-radius: 10px;
+        background-color: #f4f2e7;
     }
     
     .product-name {
@@ -286,9 +287,15 @@ function loadProducts() {
                     for (let i = 0; i < emptyStars; i++) starsHtml += '<span class="star empty">★</span>';
                     
                     const reviewText = product.review_count === 1 ? 'review' : 'reviews';
-                    const imageUrl = product.image_url 
-                        ? `/storage/${product.image_url}` 
-                        : 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
+                    
+                    let imageUrl = 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
+                    if (product.image_url) {
+                        if (product.image_url.startsWith('images/')) {
+                            imageUrl = `/${product.image_url}`;
+                        } else {
+                            imageUrl = `/storage/${product.image_url}`;
+                        }
+                    }
                     
                     return `
                         <div class="product-item">

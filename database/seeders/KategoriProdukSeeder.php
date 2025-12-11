@@ -14,16 +14,13 @@ class KategoriProdukSeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Elektronik', 'description' => 'Peralatan elektronik seperti smartphone, laptop, TV, dan aksesoris'],
-            ['name' => 'Fashion', 'description' => 'Pakaian, sepatu, dan aksesoris pria dan wanita'],
-            ['name' => 'Buku', 'description' => 'Buku, novel, majalah, dan komik'],
-            ['name' => 'Makanan & Minuman', 'description' => 'Produk makanan dan minuman'],
-            ['name' => 'Kecantikan', 'description' => 'Produk skincare, makeup, dan perawatan tubuh'],
-            ['name' => 'Olahraga', 'description' => 'Peralatan dan perlengkapan olahraga'],
-            ['name' => 'Rumah Tangga', 'description' => 'Peralatan dan perlengkapan rumah tangga'],
-            ['name' => 'Alat Tulis', 'description' => 'Alat tulis dan perlengkapan kantor'],
-            ['name' => 'Mainan & Hobi', 'description' => 'Mainan anak dan produk hobi'],
-            ['name' => 'Otomotif', 'description' => 'Aksesoris dan suku cadang kendaraan'],
+            ['name' => 'Sofas', 'description' => 'Comfortable sofas for your living room'],
+            ['name' => 'Tables & Chairs', 'description' => 'Dining tables, coffee tables, and chairs'],
+            ['name' => 'Lamps', 'description' => 'Table lamps, floor lamps, and desk lamps'],
+            ['name' => 'Beds', 'description' => 'Comfortable beds and mattresses'],
+            ['name' => 'Lighting', 'description' => 'Ceiling lights, wall lights, and outdoor lighting'],
+            ['name' => 'Cabinets', 'description' => 'Storage cabinets, wardrobes, and bookshelves'],
+            ['name' => 'Decorations', 'description' => 'Home decor items to beautify your space'],
         ];
 
         foreach ($categories as $category) {

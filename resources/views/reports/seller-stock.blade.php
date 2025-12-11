@@ -56,8 +56,6 @@
 </head>
 <body>
     <div class="header">
-        <h1>Format Laporan Bagian Penjual (toko)</h1>
-        <p style="margin-top: 10px;">(SRS-MartPlace-12)</p>
         <h2 style="margin-top: 15px;">Laporan Daftar Produk Berdasarkan Stock</h2>
         <p>Tanggal dibuat: {{ $date }} {{ $time }} oleh {{ $processedBy }}</p>
     </div>

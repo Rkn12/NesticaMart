@@ -60,7 +60,6 @@
 <body>
     <div class="header">
         <h1>Laporan Daftar Akun Penjual Berdasarkan Status</h1>
-        <p style="margin-top: 10px;">(SRS-MartPlace-09)</p>
         <p>Tanggal dibuat: {{ $date }} {{ $time }} oleh {{ $processedBy }}</p>
     </div>
 

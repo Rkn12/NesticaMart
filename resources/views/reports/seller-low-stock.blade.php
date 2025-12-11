@@ -51,7 +51,6 @@
 </head>
 <body>
     <div class="header">
-        <p>(SRS-MartPlace-14)</p>
         <h2>Laporan Daftar Produk Segera Dipesan</h2>
         <p>Tanggal dibuat: {{ $date }} {{ $time }} oleh {{ $processedBy }}</p>
     </div>

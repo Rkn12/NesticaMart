@@ -63,7 +63,7 @@
     <div class="report-card">
         <h3 class="report-title">Product Stock Report</h3>
         <p class="report-description">Download a comprehensive report of your product inventory and stock levels</p>
-        <button onclick="downloadReport('stock')" class="btn-download">
+        <button onclick="downloadSellerStockReport()" class="btn-download">
             Download Stock Report
         </button>
     </div>
@@ -71,24 +71,34 @@
     <div class="report-card">
         <h3 class="report-title">Product Rating Report</h3>
         <p class="report-description">Download a detailed report of product ratings and customer reviews</p>
-        <button onclick="downloadReport('rating')" class="btn-download">
+        <button onclick="downloadSellerRatingReport()" class="btn-download">
             Download Rating Report
+        </button>
+    </div>
+
+    <div class="report-card">
+        <h3 class="report-title">Low Stock Product Report</h3>
+        <p class="report-description">Download a detailed report of products with low stock levels</p>
+        <button onclick="downloadLowStockReport()" class="btn-download">
+            Download Low Stock Product Report
         </button>
     </div>
 </div>
 
 <script>
-const sellerId = {{ Auth::user()->seller_id }};
+    const sellerId = {{ Auth::user()->seller_id }};
 
-function downloadReport(type) {
-    let url = '';
-    if (type === 'stock') {
-        url = `/api/seller/reports/stock/${sellerId}`;
-    } else if (type === 'rating') {
-        url = `/api/seller/reports/rating/${sellerId}`;
+    function downloadSellerStockReport() {
+        if (sellerId) window.open(`/seller-reports/${sellerId}/stock`, '_blank');
     }
-    window.open(url, '_blank');
-}
+    
+    function downloadSellerRatingReport() {
+        if (sellerId) window.open(`/seller-reports/${sellerId}/stock-by-rating`, '_blank');
+    }
+    
+    function downloadLowStockReport() {
+        if (sellerId) window.open(`/seller-reports/${sellerId}/low-stock`, '_blank');
+    }
 </script>
 
 <!-- Footer -->

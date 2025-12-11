@@ -17,34 +17,47 @@ class ReportController extends Controller
     public function sellerStatusReport(Request $request)
     {
         $statusFilter = $request->get('status', 'all'); // all, active, inactive
-        
-        // Active = approved AND is_active=true
-        // Inactive = everything else (approved but is_active=false, pending, rejected)
+
         if ($statusFilter === 'active') {
-            // Only show sellers that are approved AND active
-            $sellers = Seller::where('status', 'approved')
+
+            // Hanya seller yang benar-benar aktif
+            $sellers = Seller::select('*')
+                ->where('status', 'approved')
                 ->where('is_active', true)
+                ->selectRaw("(CASE WHEN status = 'approved' AND is_active = 1 THEN 1 ELSE 0 END) AS active_flag")
+                ->orderByDesc('active_flag')
                 ->orderBy('store_name')
                 ->get();
+
             $title = 'Laporan Daftar Akun Penjual Aktif';
+
         } elseif ($statusFilter === 'inactive') {
-            // Show all inactive sellers (approved but not active, pending, rejected)
-            $sellers = Seller::where(function($query) {
-                $query->where(function($q) {
-                    $q->where('status', 'approved')->where('is_active', false);
+
+            // Semua seller tidak aktif
+            $sellers = Seller::select('*')
+                ->where(function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('status', 'approved')->where('is_active', false);
+                    })
+                    ->orWhere('status', 'pending')
+                    ->orWhere('status', 'rejected');
                 })
-                ->orWhere('status', 'pending')
-                ->orWhere('status', 'rejected');
-            })
-            ->orderBy('store_name')
-            ->get();
-            $title = 'Laporan Daftar Akun Penjual Tidak Aktif';
-        } else {
-            // Show all sellers
-            $sellers = Seller::orderBy('is_active', 'desc')
-                ->orderBy('status')
+                ->selectRaw("(CASE WHEN status = 'approved' AND is_active = 1 THEN 1 ELSE 0 END) AS active_flag")
+                ->orderByDesc('active_flag') // ini tetap nol semua → aman
                 ->orderBy('store_name')
                 ->get();
+
+            $title = 'Laporan Daftar Akun Penjual Tidak Aktif';
+
+        } else {
+
+            // SEMUA SELLER, disortir: aktif dulu → tidak aktif
+            $sellers = Seller::select('*')
+                ->selectRaw("(CASE WHEN status = 'approved' AND is_active = 1 THEN 1 ELSE 0 END) AS active_flag")
+                ->orderByDesc('active_flag')
+                ->orderBy('store_name')
+                ->get();
+
             $title = 'Laporan Daftar Akun Penjual (Semua Status)';
         }
 
@@ -60,6 +73,7 @@ class ReportController extends Controller
         $pdf = Pdf::loadView('reports.seller-status', $data);
         return $pdf->download('laporan-status-penjual-' . now()->format('Y-m-d') . '.pdf');
     }
+
 
     /**
      * SRS-MartPlace-10: Laporan daftar penjual (toko) untuk setiap Lokasi propinsi (PDF)

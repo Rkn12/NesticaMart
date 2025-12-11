@@ -53,6 +53,20 @@ class DatabaseSeeder extends Seeder
             'seller_id' => 3,
         ]);
 
+        User::factory()->create([
+            'name' => 'Dedi Prasetyo',
+            'email' => 'penjual4@example.com',
+            'role' => 'penjual',
+            'seller_id' => 4,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Made Suartini',
+            'email' => 'penjual5@example.com',
+            'role' => 'penjual',
+            'seller_id' => 5,
+        ]);
+
         // Seed produk dan review
         $this->call([
             ProdukSeeder::class,
