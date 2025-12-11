@@ -196,6 +196,25 @@
                 </a>
             </div>
         </div>
+        
+        <!-- Footer -->
+        <div style="margin-left: -30px; margin-right: -30px; margin-bottom: 0; margin-top: 60px;">
+            <footer style="background-color: #4A3B32; color: #FDFBF0; padding: 40px 60px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div class="footer-left">
+                    <p style="font-size: 14px; line-height: 1.5;">
+                        <strong>Nestica</strong><br>
+                        (+62) 123 144 567<br>
+                        info@nestica.com
+                    </p>
+                </div>
+                <div class="footer-right" style="text-align: right; font-size: 14px;">
+                    <p>
+                        &copy; 2025 Nestica<br>
+                        Made with love by kelompok 4
+                    </p>
+                </div>
+            </footer>
+        </div>
     </div>
 </body>
 </html>

@@ -29,7 +29,7 @@
         /* Top Bar */
         .top-bar {
             background-color: #7E991E;
-            color: #FBFDF0;
+            color: #FDFBF0;
             text-align: center;
             padding: 5px;
             font-size: 10px;
@@ -115,7 +115,7 @@
             background-color: #E8E8E0;
             border-radius: 4px;
             font-size: 12px;
-            width: 140px;
+            width: 280px;
             outline: none;
         }
 
@@ -132,14 +132,14 @@
             background-color: #4A3B32;
             color: #fff;
             border: none;
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 4px;
             font-size: 12px;
             cursor: pointer;
         }
 
         .user-icon {
-            font-size: 20px;
+            font-size: 30px;
             color: #4A3B32;
             cursor: pointer;
         }
@@ -869,7 +869,7 @@
 <body>
 
     <div class="top-bar">
-        BRINGS WARMTH AND CHARACTER INTO EVERY CORNER OF YOUR HOME.
+        BRINGS WARMTH AND CHARACTER INTO EVERY CORNER OF YOUR HOME
     </div>
 
     <header>
@@ -904,13 +904,13 @@
             
             <div class="search-input-group">
                 <i class="fas fa-search"></i>
-                <select name="province" id="province" class="search-input select2" style="width: 140px;">
+                <select name="province" id="province" class="search-input select2" style="width: 180px;">
                     <option value="">Province</option>
                 </select>
             </div>
             <div class="search-input-group">
                 <i class="fas fa-search"></i>
-                <select name="city" id="city" class="search-input select2" style="width: 140px;" disabled>
+                <select name="city" id="city" class="search-input select2" style="width: 180px;" disabled>
                     <option value="">City</option>
                 </select>
             </div>

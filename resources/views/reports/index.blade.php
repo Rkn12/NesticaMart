@@ -6,14 +6,14 @@
 @section('content')
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
         <div class="card">
-            <h3 style="margin-bottom: 15px;">📊 Laporan Status Penjual</h3>
-            <p style="color: #666; margin-bottom: 20px;">Laporan daftar penjual aktif dan tidak aktif</p>
+            <h3 style="margin-bottom: 15px; color: #483A2E;">Seller Status Report</h3>
+            <p style="color: #666; margin-bottom: 20px;">List of active and inactive sellers</p>
             <div class="form-group" style="margin-bottom: 15px;">
                 <label>Filter Status</label>
                 <select id="sellerStatusFilter" class="form-control">
-                    <option value="all">Semua Status</option>
-                    <option value="active">Aktif Saja</option>
-                    <option value="inactive">Tidak Aktif Saja</option>
+                    <option value="all">See All Statuses</option>
+                    <option value="active">Active Only</option>
+                    <option value="inactive">Inactive Only</option>
                 </select>
             </div>
             <button class="btn btn-primary" onclick="downloadSellerReport()">Download PDF</button>
@@ -21,24 +21,24 @@
         </div>
         
         <div class="card">
-            <h3 style="margin-bottom: 15px;">📍 Laporan Penjual per Provinsi</h3>
-            <p style="color: #666; margin-bottom: 20px;">Daftar penjual untuk setiap lokasi provinsi</p>
+            <h3 style="margin-bottom: 15px; color: #483A2E;">Seller Report by Province</h3>
+            <p style="color: #666; margin-bottom: 20px;">List of sellers by Province</p>
             <div class="form-group">
-                <label>Filter Provinsi (opsional)</label>
+                <label>Filter Province (optional)</label>
                 <select id="provinceSelect" class="form-control select2" style="width: 100%;">
-                    <option value="">Semua Provinsi</option>
+                    <option value="">See All Provinces</option>
                 </select>
             </div>
             <button class="btn btn-primary" onclick="downloadProvinceReport()">Download PDF</button>
         </div>
         
         <div class="card">
-            <h3 style="margin-bottom: 15px;">⭐ Laporan Produk & Rating</h3>
-            <p style="color: #666; margin-bottom: 20px;">Daftar produk diurutkan berdasarkan rating</p>
+            <h3 style="margin-bottom: 15px; color: #483A2E;">Product & Rating Report</h3>
+            <p style="color: #666; margin-bottom: 20px;">List of products sorted by rating</p>
             <div class="form-group">
-                <label>Filter Kategori (opsional)</label>
+                <label>Filter Category (optional)</label>
                 <select id="categorySelect" class="form-control">
-                    <option value="">Semua Kategori</option>
+                    <option value="">See All Categories</option>
                 </select>
             </div>
             <button class="btn btn-primary" onclick="downloadProductReport()">Download PDF</button>
@@ -46,21 +46,40 @@
     </div>
     
     <div class="card" style="margin-top: 20px;">
-        <h3 style="margin-bottom: 20px;">📦 Laporan Penjual (Per Seller)</h3>
-        <p style="color: #666; margin-bottom: 20px;">Pilih penjual untuk melihat laporan khusus</p>
+        <h3 style="margin-bottom: 20px; color: #483A2E;">Seller Report (Per Seller)</h3>
+        <p style="color: #666; margin-bottom: 20px;">Select a Seller to view a detailed report</p>
         
         <div class="form-group">
-            <label>Pilih Penjual</label>
+            <label>Select Seller</label>
             <select id="sellerSelect" class="form-control">
-                <option value="">-- Pilih Penjual --</option>
+                <option value="">-- Select Seller --</option>
             </select>
         </div>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;" id="sellerReports" style="display: none;">
-            <button class="btn btn-primary" onclick="downloadSellerStockReport()">Laporan Daftar Produk By Stok</button>
-            <button class="btn btn-primary" onclick="downloadSellerRatingReport()">Laporan Daftar Produk By Rating</button>
-            <button class="btn btn-danger" onclick="downloadLowStockReport()">Laporan Daftar Produk Segera Dipesan</button>
+            <button class="btn btn-primary" onclick="downloadSellerStockReport()">Product List Report By Stock</button>
+            <button class="btn btn-primary" onclick="downloadSellerRatingReport()">Product List Report By Rating</button>
+            <button class="btn btn-primary" onclick="downloadLowStockReport()">Low Stock Product Report</button>
         </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-left: -30px; margin-right: -30px; margin-bottom: -30px; margin-top: 60px;">
+        <footer style="background-color: #4A3B32; color: #FDFBF0; padding: 40px 60px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div class="footer-left">
+                <p style="font-size: 14px; line-height: 1.5;">
+                    <strong>Nestica</strong><br>
+                    (+62) 123 144 567<br>
+                    info@nestica.com
+                </p>
+            </div>
+            <div class="footer-right" style="text-align: right; font-size: 14px;">
+                <p>
+                    &copy; 2025 Nestica<br>
+                    Made with love by kelompok 4
+                </p>
+            </div>
+        </footer>
     </div>
 @endsection
 

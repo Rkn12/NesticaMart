@@ -163,7 +163,7 @@
         
         .top-banner {
             background: #7E991E;
-            color: #483A2E;
+            color: #FDFBF0;
             text-align: center;
             padding: 5px;
             font-size: 10px;
@@ -501,8 +501,8 @@
             @if(Auth::check())
                 @if(Auth::user()->isPlatform())
                     <div class="seller-info">
-                        <h1><img src="{{ asset('images/nestica-logo.png') }}" alt="Nestica" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none;">🪴</span> Nestica</h1>
-                        <p>Platform Admin</p>
+                        <h1 style="font-size: 24px;">Nestica</h1>
+                        <p style="color: #7E991E; font-weight: bold; font-size: 14px;">Platform Admin</p>
                     </div>
                 @else
                     <div class="seller-info">
@@ -512,7 +512,7 @@
                 @endif
             @else
                 <div class="seller-info">
-                    <h1><img src="{{ asset('images/nestica-logo.png') }}" alt="Nestica" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none;">🪴</span> Nestica</h1>
+                    <h1 style="font-size: 24px;">Nestica</h1>
                     <p>Marketplace Indonesia</p>
                 </div>
             @endif
@@ -547,25 +547,33 @@
                     </a>
                 </div>
             @elseif(Auth::check() && Auth::user()->isPlatform())
-                <!-- Menu untuk Platform Admin -->
-                <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
-                    Homepage
-                </a>
-                <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
-                    Product Reviews
-                </a>
-                <a href="/dashboard" class="menu-item {{ Request::is('dashboard') ? 'active' : '' }}">
-                    Dashboard
-                </a>
-                <a href="{{ route('admin.sellers.index') }}" class="menu-item {{ Request::is('admin/sellers*') && !Request::is('admin/sellers/report*') ? 'active' : '' }}">
-                    Manage Sellers
-                </a>
-                <a href="/dashboard/platform" class="menu-item {{ Request::is('dashboard/platform*') ? 'active' : '' }}">
-                    Platform Analytics
-                </a>
-                <a href="/reports" class="menu-item {{ Request::is('reports*') ? 'active' : '' }}">
-                    Platform Reports
-                </a>
+                <!-- Menu Section untuk Platform Admin -->
+                <div class="menu-section">
+                    <div class="menu-section-title">Menu</div>
+                    <a href="/dashboard" class="menu-item {{ Request::is('dashboard') ? 'active' : '' }}">
+                        Dashboard
+                    </a>
+                    <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
+                        Homepage
+                    </a>
+                </div>
+                
+                <!-- Tools Section untuk Platform Admin -->
+                <div class="menu-section">
+                    <div class="menu-section-title">Tools</div>
+                    <a href="{{ route('admin.sellers.index') }}" class="menu-item {{ Request::is('admin/sellers*') && !Request::is('admin/sellers/report*') ? 'active' : '' }}">
+                        Manage Sellers
+                    </a>
+                    <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
+                        Product Reviews
+                    </a>
+                    <a href="/dashboard/platform" class="menu-item {{ Request::is('dashboard/platform*') ? 'active' : '' }}">
+                        Platform Analytics
+                    </a>
+                    <a href="/reports" class="menu-item {{ Request::is('reports*') ? 'active' : '' }}">
+                        Platform Reports
+                    </a>
+                </div>
             @endif
         </div>
         

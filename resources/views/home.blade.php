@@ -11,17 +11,16 @@
     <div style="margin-bottom: 30px;">
         <h2 style="color: #333; margin-bottom: 10px;">
             @if(Auth::user()->role === 'penjual' && Auth::user()->seller)
-                Selamat Datang, {{ Auth::user()->name }}! 👋
+                Welcome, {{ Auth::user()->name }}! 
                 <small style="font-size: 16px; color: #666; display: block; font-weight: normal;">
                     {{ Auth::user()->seller->store_name }}
                 </small>
             @else
-                Selamat Datang, {{ Auth::user()->name }}! 👋
+                Welcome, {{ Auth::user()->name }}! 
             @endif
         </h2>
         <p style="color: #666;">
             @if(Auth::user()->isPlatform())
-                Berikut adalah ringkasan platform marketplace
             @elseif(Auth::user()->isPenjual())
                 @if(Auth::user()->seller)
                     Berikut adalah ringkasan untuk {{ Auth::user()->seller->store_name }}
@@ -42,22 +41,53 @@
             $totalReviews = \App\Models\ProductReview::count();
             $avgRating = \App\Models\Product::avg('average_rating') ?? 0;
         @endphp
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>{{ $totalSellers }}</h3>
-                <p>Total Penjual</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px;">
+            <div class="card" style="background: #7E991E; border: 2px solid #7E991E;">
+                <h3 style="color: #FDFBF0; margin-bottom: 15px;">Total Product</h3>
+                <h2 style="color: #FDFBF0; font-size: 36px; margin: 0;" id="totalSellers">-</h2>
             </div>
-            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                <h3>{{ $totalProducts }}</h3>
-                <p>Total Produk</p>
+            <div class="card" style="background: #7E991E; border: 2px solid #7E991E;">
+                <h3 style="color: #FDFBF0; margin-bottom: 15px;">Total Store</h3>
+                <h2 style="color: #FDFBF0; font-size: 36px; margin: 0;" id="totalProducts">-</h2>
             </div>
-            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                <h3>{{ $totalReviews }}</h3>
-                <p>Total Review</p>
+            <div class="card" style="background: #7E991E; border: 2px solid #7E991E;">
+                <h3 style="color: #FDFBF0; margin-bottom: 15px;">Total Comment & Rating</h3>
+                <h2 style="color: #FDFBF0; font-size: 36px; margin: 0;" id="avgRating">-</h2>
             </div>
-            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                <h3>{{ number_format($avgRating, 1) }}/5</h3>
-                <p>Rata-rata Rating</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div class="card">
+                <h2 style="color: #483A2E; font-size: 22px; font-weight: bold; margin: 0 0 5px 0;">Products per Category</h2>
+                <p style="color: #9ABA3E; margin: 0 0 25px 0;">Distribution of Products by Category</p>
+                <canvas id="categoryChart" style="max-height: 350px;"></canvas>
+            </div>
+            
+            <div class="card">
+                <h2 style="color: #483A2E; font-size: 22px; font-weight: bold; margin: 0 0 40px 0;">Stores Location</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: flex-start;">
+                    <div style="max-height: 250px; width: 250px; margin: 0 auto;">
+                        <canvas id="storesLocationChart"></canvas>
+                    </div>
+                    <div id="storesLocationLegend" style="padding-top: 30px; text-align: right;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div class="card">
+                <h2 style="color: #483A2E; font-size: 22px; font-weight: bold; margin: 0 0 30px 0;">Seller Status</h2>
+                <div style="padding: 20px 0;">
+                    <div style="margin-bottom: 40px;">
+                        <p style="color: #9ABA3E; font-size: 18px; font-weight: 600; margin: 0 0 8px 0;">Active Sellers</p>
+                        <h3 style="color: #483A2E; font-size: 48px; font-weight: bold; margin: 0;" id="activeSellersCount">-</h3>
+                    </div>
+                    <div>
+                        <p style="color: #9ABA3E; font-size: 18px; font-weight: 600; margin: 0 0 8px 0;">Inactive Sellers</p>
+                        <h3 style="color: #483A2E; font-size: 48px; font-weight: bold; margin: 0;" id="inactiveSellersCount">-</h3>
+                    </div>
+                </div>
             </div>
         </div>
     @elseif(Auth::user()->isPenjual())
@@ -145,173 +175,6 @@
                 ->limit(10)
                 ->get();
         @endphp
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <div class="card">
-                <h3 style="margin-bottom: 20px;">Status Penjual</h3>
-                <canvas id="sellersChart" style="max-height: 250px;"></canvas>
-            </div>
-            
-            <div class="card">
-                <h3 style="margin-bottom: 20px;">Produk per Kategori (Top 5)</h3>
-                <canvas id="categoryChart" style="max-height: 250px;"></canvas>
-            </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <div class="card">
-                <h3 style="margin-bottom: 20px;">Toko per Provinsi</h3>
-                <canvas id="provinceChart" style="max-height: 300px;"></canvas>
-            </div>
-            
-            <div class="card">
-                <h3 style="margin-bottom: 20px;">Pengunjung yang Memberi Review (Top 10 Provinsi)</h3>
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <p style="font-size: 32px; font-weight: bold; color: #667eea; margin: 0;">{{ $totalReviewers }}</p>
-                    <p style="color: #999; margin: 0;">Total Unique Reviewers</p>
-                </div>
-                <canvas id="reviewersChart" style="max-height: 250px;"></canvas>
-            </div>
-        </div>
-        
-        <script>
-        // Sellers Status Chart
-        const sellersCtx = document.getElementById('sellersChart').getContext('2d');
-        new Chart(sellersCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Approved', 'Pending', 'Rejected'],
-                datasets: [{
-                    data: [{{ $sellersStatus->approved }}, {{ $sellersStatus->pending }}, {{ $sellersStatus->rejected }}],
-                    backgroundColor: [
-                        'rgba(39, 174, 96, 0.8)',
-                        'rgba(243, 156, 18, 0.8)',
-                        'rgba(231, 76, 60, 0.8)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-        
-        // Products by Category Chart
-        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        new Chart(categoryCtx, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($productsByCategory->pluck('category')) !!},
-                datasets: [{
-                    label: 'Jumlah Produk',
-                    data: {!! json_encode($productsByCategory->pluck('total')) !!},
-                    backgroundColor: 'rgba(102, 126, 234, 0.7)',
-                    borderColor: 'rgba(102, 126, 234, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-        
-        // Stores by Province Chart
-        const provinceCtx = document.getElementById('provinceChart').getContext('2d');
-        new Chart(provinceCtx, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($storesByProvince->pluck('province')) !!},
-                datasets: [{
-                    label: 'Jumlah Toko',
-                    data: {!! json_encode($storesByProvince->pluck('total')) !!},
-                    backgroundColor: 'rgba(118, 75, 162, 0.7)',
-                    borderColor: 'rgba(118, 75, 162, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                indexAxis: 'y',
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-        
-        // Reviewers by Province Chart
-        const reviewersCtx = document.getElementById('reviewersChart').getContext('2d');
-        new Chart(reviewersCtx, {
-            type: 'doughnut',
-            data: {
-                labels: {!! json_encode($reviewsByProvince->pluck('reviewer_province')) !!},
-                datasets: [{
-                    data: {!! json_encode($reviewsByProvince->pluck('total')) !!},
-                    backgroundColor: [
-                        'rgba(102, 126, 234, 0.8)',
-                        'rgba(240, 147, 251, 0.8)',
-                        'rgba(79, 172, 254, 0.8)',
-                        'rgba(67, 233, 123, 0.8)',
-                        'rgba(255, 159, 64, 0.8)',
-                        'rgba(231, 76, 60, 0.8)',
-                        'rgba(39, 174, 96, 0.8)',
-                        'rgba(243, 156, 18, 0.8)',
-                        'rgba(155, 89, 182, 0.8)',
-                        'rgba(52, 152, 219, 0.8)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 10
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        </script>
-        
-        <div class="card">
-            <div class="card-header">
-                <h3>Quick Actions</h3>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <a href="/sellers" class="btn btn-primary">Kelola Penjual</a>
-                <a href="/dashboard/platform" class="btn btn-primary">Dashboard Platform</a>
-                <a href="/reports" class="btn btn-primary">Download Laporan</a>
-            </div>
-        </div>
     @elseif(Auth::user()->isPenjual())
         <!-- Charts untuk Penjual -->
         @php
@@ -554,6 +417,25 @@
             </div>
         </div>
     @endif
+
+    <!-- Footer -->
+    <div style="margin-left: -30px; margin-right: -30px; margin-bottom: -30px; margin-top: 60px;">
+        <footer style="background-color: #4A3B32; color: #FDFBF0; padding: 40px 60px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div class="footer-left">
+                <p style="font-size: 14px; line-height: 1.5;">
+                    <strong>Nestica</strong><br>
+                    (+62) 123 144 567<br>
+                    info@nestica.com
+                </p>
+            </div>
+            <div class="footer-right" style="text-align: right; font-size: 14px;">
+                <p>
+                    &copy; 2025 Nestica<br>
+                    Made with love by kelompok 4
+                </p>
+            </div>
+        </footer>
+    </div>
 @endsection
 
 @section('extra-scripts')
@@ -791,5 +673,171 @@ async function loadDashboardData() {
     }
     
     loadDashboardData();
-</script>
-@endsection
+    
+    // Platform Analytics Scripts
+    async function loadSummary() {
+        try {
+            const response = await fetch('/api/dashboard/summary', {
+                headers: {'Accept': 'application/json'}
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                const data = result.data;
+                if(document.getElementById('totalSellers')) document.getElementById('totalSellers').textContent = data.total_sellers;
+                if(document.getElementById('totalProducts')) document.getElementById('totalProducts').textContent = data.total_products;
+                if(document.getElementById('avgRating')) document.getElementById('avgRating').textContent = data.average_rating + '/5';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+    async function loadCategoryChart() {
+        try {
+            const response = await fetch('/api/dashboard/products-by-category', {
+                headers: {'Accept': 'application/json'}
+            });
+            const result = await response.json();
+            
+            if (result.success && document.getElementById('categoryChart')) {
+                const data = result.data;
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.map(item => item.category),
+                        datasets: [{
+                            label: '',
+                            data: data.map(item => item.total),
+                            backgroundColor: '#483A2E',
+                            borderRadius: 8,
+                            barThickness: 80
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    color: '#483A2E',
+                                    font: {
+                                        size: 12
+                                    }
+                                },
+                                grid: {
+                                    color: '#9ABA3E',
+                                    lineWidth: 1.5
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#483A2E',
+                                    font: {
+                                        size: 12,
+                                        weight: '500'
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+    async function loadStoresLocationChart() {
+        try {
+            const response = await fetch('/api/dashboard/stores-by-province', {
+                headers: {'Accept': 'application/json'}
+            });
+            const result = await response.json();
+            
+            if (result.success && document.getElementById('storesLocationChart')) {
+                const data = result.data;
+                const ctx = document.getElementById('storesLocationChart').getContext('2d');
+                
+                const colors = ['#6B4226', '#9ABA3E', '#F4D06F', '#D5CDC2'];
+                
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.map(item => item.province),
+                        datasets: [{
+                            data: data.map(item => item.total),
+                            backgroundColor: colors,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+                
+                // Generate custom legend
+                let legendHTML = '';
+                data.forEach((item, index) => {
+                    legendHTML += `
+                        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                            <div style="width: 20px; height: 20px; background: ${colors[index]}; border-radius: 3px; margin-right: 10px;"></div>
+                            <span style="color: #483A2E; font-weight: 500; font-size: 14px;">${item.province} (${item.total})</span>
+                        </div>
+                    `;
+                });
+                document.getElementById('storesLocationLegend').innerHTML = legendHTML;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+    async function loadSellersStatus() {
+        try {
+            const response = await fetch('/api/dashboard/sellers-status', {
+                headers: {'Accept': 'application/json'}
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                const data = result.data;
+                if(document.getElementById('activeSellersCount')) document.getElementById('activeSellersCount').textContent = data.approved;
+                if(document.getElementById('inactiveSellersCount')) document.getElementById('inactiveSellersCount').textContent = data.pending + data.rejected;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+    // Load Platform Analytics if on platform admin
+    if (document.getElementById('categoryChart') || document.getElementById('storesLocationChart')) {
+        loadSummary();
+        loadCategoryChart();
+        loadStoresLocationChart();
+        loadSellersStatus();
+    }
+

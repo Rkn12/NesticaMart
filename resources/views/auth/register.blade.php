@@ -507,7 +507,7 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label>Country (Kecamatan)</label>
+                        <label>District (Kecamatan)</label>
                         <select name="subdistrict" id="subdistrict" class="select2" style="width: 100%;" required disabled>
                             <option value="">Select Kecamatan</option>
                         </select>

@@ -225,7 +225,7 @@
 <body>
 
     <div class="top-bar">
-        BRINGS WARMTH AND CHARACTER INTO EVERY CORNER OF YOUR HOME.
+        BRINGS WARMTH AND CHARACTER INTO EVERY CORNER OF YOUR HOME
     </div>
 
     <div class="header-main">

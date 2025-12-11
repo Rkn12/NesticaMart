@@ -17,7 +17,7 @@
     }
     
     .review-card {
-        background: #FBFDF0;
+        background: #ffffff;
         padding: 25px;
         border-radius: 15px;
         margin-bottom: 20px;

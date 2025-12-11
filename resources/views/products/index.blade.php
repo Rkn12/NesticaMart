@@ -29,7 +29,7 @@
         /* Top Bar */
         .top-bar {
             background-color: #7E991E;
-            color: #FBFDF0;
+            color: #FDFBF0;
             text-align: center;
             padding: 5px;
             font-size: 10px;
@@ -115,7 +115,7 @@
             background-color: #E8E8E0;
             border-radius: 4px;
             font-size: 12px;
-            width: 140px;
+            width: 290px;
             outline: none;
         }
 
@@ -132,14 +132,14 @@
             background-color: #4A3B32;
             color: #fff;
             border: none;
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 4px;
             font-size: 12px;
             cursor: pointer;
         }
 
         .user-icon {
-            font-size: 20px;
+            font-size: 30px;
             color: #4A3B32;
             cursor: pointer;
         }
@@ -151,11 +151,23 @@
             padding: 40px 60px;
         }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+        .products-banner {
+            width: 100%;
+            height: auto;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: block;
+            max-height: 400px;
+        }
+
+        .banner-text {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 24px;
+            color: #4A3B32;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         .section-title {
@@ -323,7 +335,7 @@
 <body>
 
     <div class="top-bar">
-        BRINGS WARMTH AND CHARACTER INTO EVERY CORNER OF YOUR HOME.
+        BRINGS WARMTH AND CHARACTER INTO EVERY CORNER OF YOUR HOME
     </div>
 
     <header>
@@ -359,7 +371,7 @@
             <div class="search-input-group">
                 <i class="fas fa-search"></i>
                 <!-- Using Select2 for Province -->
-                <select name="province" id="province" class="search-input select2" style="width: 140px;">
+                <select name="province" id="province" class="search-input select2" style="width: 180px;">
                     <option value="">Province</option>
                 </select>
             </div>
@@ -367,7 +379,7 @@
             <div class="search-input-group">
                 <i class="fas fa-search"></i>
                 <!-- Using Select2 for City but styled small -->
-                <select name="city" id="city" class="search-input select2" style="width: 140px;" disabled>
+                <select name="city" id="city" class="search-input select2" style="width: 180px;" disabled>
                     <option value="">City</option>
                 </select>
             </div>
@@ -392,6 +404,14 @@
     
 
     <div class="products-section">
+        <img src="{{ asset('images/nestica-header.jpg') }}" alt="Nestica Header" class="products-banner">
+        
+        <div class="banner-text">
+            At nestica, Design that feels like home —<br>
+            because comfort starts<br>
+            with the space you live in.
+        </div>
+        
         <div class="section-header">
             <h2 class="section-title">PRODUCTS</h2>
             @if(Auth::check())

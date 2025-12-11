@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="page-header">
-    <h1>👥 Kelola Penjual</h1>
+    <h1>Manage Sellers</h1>
     <div class="stats-cards">
         <div class="stat-card">
             <div class="stat-number">{{ $sellers->total() }}</div>
@@ -17,11 +17,11 @@
         @endphp
         <div class="stat-card warning">
             <div class="stat-number">{{ $pending }}</div>
-            <div class="stat-label">Menunggu Approval</div>
+            <div class="stat-label">Pending Approval</div>
         </div>
         <div class="stat-card success">
             <div class="stat-number">{{ $active }}</div>
-            <div class="stat-label">Seller Aktif</div>
+            <div class="stat-label">Active Sellers</div>
         </div>
     </div>
 </div>
@@ -40,47 +40,24 @@
     </div>
 @endif
 
-<div class="card">
-    <div class="card-header">
-        <h3>Filter & Pencarian</h3>
-    </div>
-    
-    <form method="GET" action="{{ route('admin.sellers.index') }}" class="search-bar">
-        <input type="text" name="search" class="form-control" placeholder="🔍 Cari nama toko, pemilik, atau email..." value="{{ request('search') }}">
-        
-        <select name="status" class="form-control">
-            <option value="">📋 Semua Status</option>
-            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>⏳ Pending</option>
-            <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>✅ Approved</option>
-            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>❌ Rejected</option>
-        </select>
-        
-        <select name="active" class="form-control">
-            <option value="">🔄 Status Aktif</option>
-            <option value="1" {{ request('active') == '1' ? 'selected' : '' }}>🟢 Aktif</option>
-            <option value="0" {{ request('active') == '0' ? 'selected' : '' }}>🔴 Non-Aktif</option>
-        </select>
-        
-        <button type="submit" class="btn btn-primary">Cari</button>
-    </form>
-</div>
+{{-- Filter & Search card removed as requested --}}
 
 <div class="card">
     <div class="card-header">
-        <h3>Daftar Seller</h3>
+        <h3>Seller List</h3>
     </div>
     
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
-                    <th>🏪 Toko</th>
-                    <th>👤 Pemilik</th>
-                    <th>📞 Kontak</th>
-                    <th>📍 Lokasi</th>
-                    <th>📊 Status</th>
-                    <th>📅 Daftar</th>
-                    <th>⚙️ Aksi</th>
+                    <th>Store</th>
+                    <th>Owner</th>
+                    <th>Contact</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Registered</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,8 +77,8 @@
                     </td>
                     <td>
                         <div class="contact-info">
-                            <div>📧 {{ $seller->email }}</div>
-                            <div>📱 {{ $seller->phone }}</div>
+                            <div>{{ $seller->email }}</div>
+                            <div>{{ $seller->phone }}</div>
                         </div>
                     </td>
                     <td>
@@ -113,19 +90,19 @@
                     <td>
                         <div class="status-badges">
                             @if($seller->status === 'approved')
-                                <span class="badge badge-success">✅ Approved</span>
+                                <span class="badge badge-success">Approved</span>
                             @elseif($seller->status === 'rejected')
-                                <span class="badge badge-error">❌ Rejected</span>
+                                <span class="badge badge-error">Rejected</span>
                             @else
-                                <span class="badge badge-warning">⏳ Pending</span>
+                                <span class="badge badge-warning">Pending</span>
                             @endif
                             
                             @if($seller->status === 'approved')
                                 <br>
                                 @if($seller->is_active)
-                                    <span class="badge badge-active">🟢 Aktif</span>
+                                    <span class="badge badge-active">Active</span>
                                 @else
-                                    <span class="badge badge-inactive">🔴 Non-Aktif</span>
+                                    <span class="badge badge-inactive">Inactive</span>
                                 @endif
                             @endif
                         </div>
@@ -138,9 +115,7 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ route('admin.sellers.show', $seller->id) }}" class="btn btn-info btn-sm" title="Lihat Detail">
-                                👁️
-                            </a>
+                            {{-- Lihat Detail button removed as requested --}}
                             
                             @if($seller->status === 'pending')
                                 <button onclick="updateStatus({{ $seller->id }}, 'approved')" class="btn btn-success btn-sm" title="Setujui">
@@ -153,10 +128,10 @@
                                 <form method="POST" action="{{ route('admin.sellers.toggle-active', $seller->id) }}" style="display: inline;">
                                     @csrf
                                     <button type="submit" 
-                                            class="btn {{ $seller->is_active ? 'btn-warning' : 'btn-success' }} btn-sm"
+                                            class="btn {{ $seller->is_active ? 'btn-error' : 'btn-success' }} btn-sm"
                                             title="{{ $seller->is_active ? 'Nonaktifkan' : 'Aktifkan' }}"
                                             onclick="return confirm('Yakin ingin {{ $seller->is_active ? 'menonaktifkan' : 'mengaktifkan' }} seller ini?')">
-                                        {{ $seller->is_active ? '🔴' : '🟢' }}
+                                        {{ $seller->is_active ? 'Nonaktif' : 'Aktif' }}
                                     </button>
                                 </form>
                             @endif
@@ -408,4 +383,23 @@ window.onclick = function(event) {
     }
 }
 </script>
+
+<!-- Footer -->
+<div style="margin-left: -30px; margin-right: -30px; margin-bottom: -30px; margin-top: 60px;">
+    <footer style="background-color: #4A3B32; color: #FDFBF0; padding: 40px 60px; display: flex; justify-content: space-between; align-items: flex-end;">
+        <div class="footer-left">
+            <p style="font-size: 14px; line-height: 1.5;">
+                <strong>Nestica</strong><br>
+                (+62) 123 144 567<br>
+                info@nestica.com
+            </p>
+        </div>
+        <div class="footer-right" style="text-align: right; font-size: 14px;">
+            <p>
+                &copy; 2025 Nestica<br>
+                Made with love by kelompok 4
+            </p>
+        </div>
+    </footer>
+</div>
 @endsection
