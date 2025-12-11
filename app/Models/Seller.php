@@ -71,14 +71,6 @@ class Seller extends Model
         $this->save();
     }
 
-    /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory()
-    {
-        return \Database\Factories\PenjualFactory::new();
-    }
-
     // Relasi ke user
     public function user()
     {

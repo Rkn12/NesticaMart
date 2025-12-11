@@ -967,58 +967,6 @@
             <p>{{ $product->description }}</p>
         </div>
 
-        <!-- Details & Material Description Section -->
-        <div class="details-material-section">
-            <h2>Details & Material Description</h2>
-            
-            <!-- Details List -->
-            <div class="details-list">
-                <ul>
-                    @if($product->merek)
-                        <li>Merek: {{ $product->merek }}</li>
-                    @endif
-                    @if($product->bahan)
-                        <li>Material: {{ $product->bahan }}</li>
-                    @endif
-                    @if($product->origin)
-                        <li>Origin: {{ $product->origin }}</li>
-                    @endif
-                    @if($product->garansi)
-                        <li>Garansi: {{ $product->garansi }}</li>
-                    @endif
-                    @if($product->dimensi && is_array($product->dimensi))
-                        <li>Dimensi: {{ implode(' x ', $product->dimensi) }} cm</li>
-                    @endif
-                    @if($product->spesifikasi && is_array($product->spesifikasi))
-                        @foreach($product->spesifikasi as $spec)
-                            <li>{{ $spec }}</li>
-                        @endforeach
-                    @endif
-                </ul>
-            </div>
-
-            <!-- Material Section -->
-            <div class="material-section">
-                <!-- Material Title - Centered at top -->
-                <h3 class="material-title">{{ $product->material_title ?? 'Material Information' }}</h3>
-                
-                <!-- Material Content - Photo and Description side by side -->
-                <div class="material-content">
-                    <!-- Material Photo - Left -->
-                    <div class="material-photo-container">
-                        <img src="https://via.placeholder.com/200x200/D5CDC2/483A2E?text=Material" alt="Material" class="material-photo">
-                    </div>
-                    
-                    <!-- Material Description - Right -->
-                    <div class="material-text">
-                        <p class="material-description">
-                            {{ $product->material_description ?? 'High-quality materials used in manufacturing this product to ensure durability and longevity.' }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Reviews Section -->
         <div class="reviews-section-wrapper" id="reviews-section">
             <div class="reviews-header">
@@ -1055,29 +1003,40 @@
 
             @forelse($product->reviews as $review)
                 <div class="review-item">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                        <div style="flex: 1;">
-                            <div class="review-rating" style="font-size: 18px; margin-bottom: 10px;">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= $review->rating)
-                                        <i class="fas fa-star" style="color: #EFCD77;"></i>
-                                    @else
-                                        <i class="fas fa-star" style="color: #E5E5E5;"></i>
-                                    @endif
-                                @endfor
-                            </div>
-                            <h4 style="color: #4A3B32; font-size: 16px; font-weight: 600; margin-bottom: 10px;">{{ $review->review_title ?? 'Tanpa Judul' }}</h4>
-                            <p class="review-comment" style="color: #483A2E; line-height: 1.7; margin-bottom: 15px; font-size: 15px;">{{ $review->comment }}</p>
-                            <p style="color: #8B9D3B; font-size: 13px; font-weight: 600;">{{ $review->reviewer_name }}, {{ $review->reviewer_province ?? 'Unknown' }}</p>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <div class="stars" style="font-size: 16px;">
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= $review->rating)
+                                    <i class="fas fa-star" style="color: #EFCD77;"></i>
+                                @else
+                                    <i class="fas fa-star" style="color: #E5E5E5;"></i>
+                                @endif
+                            @endfor
                         </div>
-                        <div style="font-size: 13px; color: #999; text-align: right; white-space: nowrap; margin-left: 20px;">
-                            {{ $review->created_at->format('d F Y') }}
-                        </div>
+                        <span style="font-size: 13px; color: #999;">{{ $review->created_at->format('d F Y') }}</span>
+                    </div>
+                    
+                    <h3 style="font-size: 16px; font-weight: 700; color: #4A3B32; margin-bottom: 5px;">{{ $review->reviewer_name }}</h3>
+                    
+                    <div style="font-size: 13px; color: #666; margin-bottom: 10px;">
+                        {{ $review->reviewer_phone }} | {{ $review->reviewer_email }}
+                    </div>
+                    
+                    @if($review->comment)
+                        <p style="color: #483A2E; line-height: 1.6; margin-bottom: 10px;">{{ $review->comment }}</p>
+                    @else
+                        <p style="color: #999; font-style: italic; margin-bottom: 10px;">No comment provided</p>
+                    @endif
+                    
+                    <div style="font-size: 13px; color: #8B9D3B; font-weight: 600;">
+                        {{ $review->reviewer_province }}
                     </div>
                 </div>
             @empty
-                <div class="no-reviews">
-                    <p>Belum ada review untuk produk ini. Jadilah yang pertama memberikan review!</p>
+                <div class="no-reviews" style="text-align: center; padding: 40px; color: #999;">
+                    <div style="font-size: 40px; margin-bottom: 10px;">📝</div>
+                    <h4 style="margin-bottom: 10px; color: #4A3B32;">No Reviews Yet</h4>
+                    <p>There are no customer reviews for this product.</p>
                 </div>
             @endforelse
         </div>

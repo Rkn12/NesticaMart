@@ -17,7 +17,9 @@ class SellerDashboardController extends Controller
         // Get summary statistics
         $totalProducts = Product::where('seller_id', $seller_id)->count();
         $totalStock = Product::where('seller_id', $seller_id)->sum('stock');
-        $avgRating = Product::where('seller_id', $seller_id)->avg('average_rating');
+        $avgRating = Product::where('seller_id', $seller_id)
+            ->where('average_rating', '>', 0)
+            ->avg('average_rating');
         
         $totalReviews = ProductReview::whereHas('product', function($q) use ($seller_id) {
             $q->where('seller_id', $seller_id);
@@ -143,7 +145,7 @@ class SellerDashboardController extends Controller
         $summary = [
             'total_products' => $products->count(),
             'total_stock' => $products->sum('stock'),
-            'average_rating' => round($products->avg('average_rating'), 2),
+            'average_rating' => round($products->where('average_rating', '>', 0)->avg('average_rating'), 2),
             'total_reviews' => $totalReviews,
             'low_stock_products' => $products->where('stock', '<', 2)->count(),
             'out_of_stock_products' => $products->where('stock', 0)->count(),

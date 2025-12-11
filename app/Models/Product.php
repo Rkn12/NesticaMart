@@ -23,33 +23,15 @@ class Product extends Model
         'location_city',
         'average_rating',
         // Field baru sesuai SRS-MartPlace-03
-        'merek',
-        'garansi',
-        'dimensi',
-        'bahan',
-        'origin',
         'berat',
         'kondisi',
-        'spesifikasi',
-        'material_title',
-        'material_description',
     ];
 
     protected $casts = [
-        'dimensi' => 'array',
-        'spesifikasi' => 'array',
         'price' => 'decimal:2',
         'berat' => 'decimal:2',
         'average_rating' => 'decimal:1',
     ];
-
-    /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory()
-    {
-        return \Database\Factories\ProdukFactory::new();
-    }
 
     // Relasi ke seller
     public function seller()

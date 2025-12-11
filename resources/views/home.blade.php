@@ -94,7 +94,7 @@
         <!-- Dashboard Penjual -->
         @php
             $sellerStats = \App\Models\Product::where('seller_id', Auth::user()->seller_id)
-                ->selectRaw('COUNT(*) as total_products, SUM(stock) as total_stock, AVG(average_rating) as avg_rating')
+                ->selectRaw('COUNT(*) as total_products, SUM(stock) as total_stock, AVG(CASE WHEN average_rating > 0 THEN average_rating ELSE NULL END) as avg_rating')
                 ->first();
             $totalReviews = \App\Models\ProductReview::whereHas('product', function($q) {
                 $q->where('seller_id', Auth::user()->seller_id);

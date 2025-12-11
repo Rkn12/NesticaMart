@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class SellerReportController extends Controller
 {
@@ -22,7 +23,7 @@ class SellerReportController extends Controller
             'title' => 'Laporan Daftar Stock Produk',
             'date' => now()->format('d F Y'),
             'time' => now()->format('H:i'),
-            'processedBy' => auth()->user()->name ?? 'Admin',
+            'processedBy' => Auth::user()->name ?? 'Admin',
             'seller' => $products->first()?->seller,
             'products' => $products,
             'summary' => [
@@ -48,16 +49,16 @@ class SellerReportController extends Controller
             ->get();
 
         $data = [
-            'title' => 'Laporan Stock Produk Berdasarkan Rating',
+            'title' => 'Laporan Stock Produk Segera Pesan',
             'date' => now()->format('d F Y'),
             'time' => now()->format('H:i'),
-            'processedBy' => auth()->user()->name ?? 'Admin',
+            'processedBy' => Auth::user()->name ?? 'Admin',
             'seller' => $products->first()?->seller,
             'products' => $products,
             'summary' => [
                 'total_products' => $products->count(),
                 'total_stock' => $products->sum('stock'),
-                'average_rating' => round($products->avg('average_rating'), 2),
+                'average_rating' => round($products->where('average_rating', '>', 0)->avg('average_rating'), 2),
                 'total_reviews' => $products->sum(fn($p) => $p->reviews->count()),
             ]
         ];
@@ -81,7 +82,7 @@ class SellerReportController extends Controller
             'title' => 'Laporan Stock Barang Segera Habis (Stock < 2)',
             'date' => now()->format('d F Y'),
             'time' => now()->format('H:i'),
-            'processedBy' => auth()->user()->name ?? 'Admin',
+            'processedBy' => Auth::user()->name ?? 'Admin',
             'seller' => $products->first()?->seller ?? Product::where('seller_id', $seller_id)->first()?->seller,
             'products' => $products,
             'summary' => [
