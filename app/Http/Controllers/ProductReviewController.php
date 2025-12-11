@@ -15,11 +15,8 @@ class ProductReviewController extends Controller
      */
     public function index()
     {
-        // Hanya tampilkan review untuk produk dari Toko Elektronik Jakarta (seller_id = 1)
+        // Tampilkan review untuk semua produk dari semua toko
         $reviews = ProductReview::with(['product.seller'])
-            ->whereHas('product', function($query) {
-                $query->where('seller_id', 1); // Toko Elektronik Jakarta
-            })
             ->orderBy('created_at', 'desc')
             ->paginate(5);
 

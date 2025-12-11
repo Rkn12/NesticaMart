@@ -140,7 +140,7 @@
     }
     
     .product-name p {
-        font-size: 12px;
+        font-size: 16px;
         color: #999;
     }
 
