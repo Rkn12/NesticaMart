@@ -117,6 +117,12 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
             return back()->withErrors($validator)->withInput();
         }
 
@@ -155,6 +161,13 @@ class AuthController extends Controller
             'file_ktp_pic' => $fileKtpPath,
             'status' => 'pending',
         ]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Registration successful. Please wait for verification.'
+            ]);
+        }
 
         return view('auth.registration-success');
     }

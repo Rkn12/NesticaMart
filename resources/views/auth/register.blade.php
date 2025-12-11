@@ -24,7 +24,7 @@
 
         .top-bar {
             background-color: #7E991E;
-            color: #483A2E;
+            color: #FBFDF0;
             text-align: center;
             padding: 5px;
             font-size: 10px;
@@ -51,10 +51,9 @@
 
         .banner {
             background-color: #A5A58D;
-            /* Ganti 'images/banner.jpg' dengan nama file gambar Anda yang ada di folder public/images */
             background-image: url("{{ asset('images/banner.PNG') }}");
-            background-size: cover; /* Mengatur gambar agar memenuhi area */
-            background-position: center; /* Mengatur posisi gambar di tengah */
+            background-size: cover;
+            background-position: center;
             height: 150px;
             display: flex;
             align-items: center;
@@ -249,6 +248,124 @@
             margin-bottom: 20px;
             border: 1px solid #f5c6cb;
         }
+
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .success-content {
+            background-color: #FDFBF0;
+            margin: auto;
+            padding: 70px 60px 50px 60px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            animation: slideIn 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideIn {
+            from { transform: translate(-50%, -60%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        .close-btn {
+            color: #483A2E !important;
+            position: absolute;
+            right: 25px;
+            top: 20px;
+            font-size: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: none !important;
+            padding: 0;
+            line-height: 1;
+            outline: none;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            opacity: 0.7;
+        }
+
+        .close-btn:focus {
+            outline: none;
+            background: none !important;
+        }
+
+        .paper-plane-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .paper-plane-icon svg {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .success-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4A3B32;
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+        }
+
+        .success-content .verification-text {
+            font-size: 14px;
+            color: #7E991E;
+            line-height: 1.8;
+            margin-bottom: 35px;
+            font-family: Arial, sans-serif;
+        }
+
+        .success-content button {
+            padding: 12px 35px;
+            background: #4A3B32;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        .success-content button:hover {
+            background: #3a2e27;
+        }
     </style>
 </head>
 <body>
@@ -276,7 +393,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ url('/register') }}" enctype="multipart/form-data">
+        <form id="registerForm" method="POST" action="{{ url('/register') }}" enctype="multipart/form-data">
             @csrf
 
             <!-- Store Details -->
@@ -319,7 +436,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label>National Identity Number</label>
+                        <label>No. KTP</label>
                         <input type="text" name="nik" class="form-control" value="{{ old('nik') }}" maxlength="16" required>
                     </div>
                 </div>
@@ -328,7 +445,7 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label>Identity Card</label>
+                        <label>Identity Card (KTP)</label>
                         <div class="file-input-wrapper">
                             <input type="file" name="file_ktp_pic" accept="image/*,application/pdf" required>
                         </div>
@@ -336,7 +453,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label>Picture</label>
+                        <label>Picture (Foto PIC)</label>
                         <div class="file-input-wrapper">
                             <input type="file" name="foto_ktp_pic" accept="image/*" required>
                         </div>
@@ -371,7 +488,7 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label>Province</label>
+                        <label>Province (Provinsi)</label>
                         <select name="province" id="province" class="select2" style="width: 100%;" required>
                             <option value="">Select Province</option>
                         </select>
@@ -425,7 +542,47 @@
         </div>
     </footer>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="success-content">
+            <button class="close-btn" onclick="closeSuccessModal()" style="color: #483A2E; font-size: 40px; background: none; border: none;">×</button>
+            <div class="paper-plane-icon">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" style="width: 80px; height: 80px;">
+                    <circle cx="25" cy="6" r="3" fill="#7E991E"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.9" transform="rotate(30 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.8" transform="rotate(60 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.7" transform="rotate(90 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.6" transform="rotate(120 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.5" transform="rotate(150 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.4" transform="rotate(180 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.3" transform="rotate(210 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.2" transform="rotate(240 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.15" transform="rotate(270 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.1" transform="rotate(300 25 25)"/>
+                    <circle cx="25" cy="6" r="3" fill="#7E991E" opacity="0.05" transform="rotate(330 25 25)"/>
+                </svg>
+            </div>
+            <h3>Your registration is currently under verification</h3>
+            <p class="verification-text">
+                The verification result will be sent to your email. Please make sure your email is active.
+            </p>
+            <button onclick="backToHomepage()">Back to Homepage</button>
+        </div>
+    </div>
+
     <script>
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+            document.getElementById('registerForm').reset();
+            $('.select2').val(null).trigger('change');
+            // Reset disabled states
+            $('#city, #subdistrict, #kelurahan').prop('disabled', true);
+        }
+
+        function backToHomepage() {
+            window.location.href = '{{ url("/products") }}';
+        }
+
         $(document).ready(function() {
             $('.select2').select2();
 
@@ -515,6 +672,40 @@
                         villageSelect.prop('disabled', false);
                     });
                 }
+            });
+
+            // Handle form submission with AJAX
+            $('#registerForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var formData = new FormData(this);
+                var submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.prop('disabled', true).text('Processing...');
+                
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        submitBtn.prop('disabled', false).text('Apply');
+                        $('#successModal').css('display', 'block');
+                    },
+                    error: function(xhr) {
+                        submitBtn.prop('disabled', false).text('Apply');
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorMsg = 'Please fix the following errors:\n';
+                            $.each(errors, function(key, value) {
+                                errorMsg += '- ' + value[0] + '\n';
+                            });
+                            alert(errorMsg);
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
+                    }
+                });
             });
         });
     </script>

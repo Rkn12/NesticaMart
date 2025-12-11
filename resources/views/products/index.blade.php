@@ -29,7 +29,7 @@
         /* Top Bar */
         .top-bar {
             background-color: #7E991E;
-            color: #483A2E;
+            color: #FBFDF0;
             text-align: center;
             padding: 5px;
             font-size: 10px;
