@@ -170,6 +170,13 @@
             font-weight: 400;
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         .section-title {
             font-size: 32px;
             font-weight: 800;
@@ -180,7 +187,7 @@
         .btn-add-product {
             background-color: #4A3B32;
             color: #fff;
-            padding: 10px 20px;
+            padding: 6px 12px;
             border-radius: 20px;
             text-decoration: none;
             font-weight: 600;
@@ -414,7 +421,7 @@
         
         <div class="section-header">
             <h2 class="section-title">PRODUCTS</h2>
-            @if(Auth::check())
+            @if(Auth::check() && Auth::user()->isPenjual())
                 <a href="{{ route('seller.products.upload.form') }}" class="btn-add-product">
                     <i class="fas fa-plus"></i> Add Your Products
                 </a>

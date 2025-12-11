@@ -550,7 +550,7 @@
                 <!-- Menu Section untuk Platform Admin -->
                 <div class="menu-section">
                     <div class="menu-section-title">Menu</div>
-                    <a href="/dashboard" class="menu-item {{ Request::is('dashboard') ? 'active' : '' }}">
+                    <a href="/dashboard/platform" class="menu-item {{ Request::is('dashboard/platform*') ? 'active' : '' }}">
                         Dashboard
                     </a>
                     <a href="/products" class="menu-item {{ Request::is('products*') ? 'active' : '' }}">
@@ -566,9 +566,6 @@
                     </a>
                     <a href="/reviews" class="menu-item {{ Request::is('reviews*') ? 'active' : '' }}">
                         Product Reviews
-                    </a>
-                    <a href="/dashboard/platform" class="menu-item {{ Request::is('dashboard/platform*') ? 'active' : '' }}">
-                        Platform Analytics
                     </a>
                     <a href="/reports" class="menu-item {{ Request::is('reports*') ? 'active' : '' }}">
                         Platform Reports
