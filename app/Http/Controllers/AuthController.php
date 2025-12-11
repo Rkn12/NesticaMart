@@ -127,49 +127,60 @@ class AuthController extends Controller
         }
 
         // Upload files
-        $fotoKtpPath = null;
-        $fileKtpPath = null;
-        
-        if ($request->hasFile('foto_ktp_pic')) {
-            $fotoKtpPath = $request->file('foto_ktp_pic')->store('ktp/foto', 'public');
-        }
-        
-        if ($request->hasFile('file_ktp_pic')) {
-            $fileKtpPath = $request->file('file_ktp_pic')->store('ktp/file', 'public');
-        }
+        try {
+            $fotoKtpPath = null;
+            $fileKtpPath = null;
+            
+            if ($request->hasFile('foto_ktp_pic')) {
+                $fotoKtpPath = $request->file('foto_ktp_pic')->store('ktp/foto', 'public');
+            }
+            
+            if ($request->hasFile('file_ktp_pic')) {
+                $fileKtpPath = $request->file('file_ktp_pic')->store('ktp/file', 'public');
+            }
 
-        // Create seller record with status pending
-        // PIC = Pemilik (data sama)
-        $seller = Seller::create([
-            'store_name' => $request->store_name,
-            'store_description' => $request->store_description,
-            'owner_name' => $request->owner_name,
-            'nik' => $request->nik,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'province' => $request->province,
-            'city' => $request->city,
-            'subdistrict' => $request->subdistrict,
-            'kelurahan' => $request->kelurahan,
-            'rt' => $request->rt,
-            'rw' => $request->rw,
-            'address' => $request->address,
-            'pic_name' => $request->owner_name, // PIC = Pemilik
-            'pic_phone' => $request->phone,
-            'pic_email' => $request->email,
-            'foto_ktp_pic' => $fotoKtpPath,
-            'file_ktp_pic' => $fileKtpPath,
-            'status' => 'pending',
-        ]);
-
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Registration successful. Please wait for verification.'
+            // Create seller record with status pending
+            // PIC = Pemilik (data sama)
+            $seller = Seller::create([
+                'store_name' => $request->store_name,
+                'store_description' => $request->store_description,
+                'owner_name' => $request->owner_name,
+                'nik' => $request->nik,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'province' => $request->province,
+                'city' => $request->city,
+                'subdistrict' => $request->subdistrict,
+                'kelurahan' => $request->kelurahan,
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+                'address' => $request->address,
+                'pic_name' => $request->owner_name, // PIC = Pemilik
+                'pic_phone' => $request->phone,
+                'pic_email' => $request->email,
+                'foto_ktp_pic' => $fotoKtpPath,
+                'file_ktp_pic' => $fileKtpPath,
+                'status' => 'pending',
             ]);
-        }
 
-        return view('auth.registration-success');
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Registration successful. Please wait for verification.'
+                ]);
+            }
+
+            return view('auth.registration-success');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Registration Error: ' . $e->getMessage());
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Registration failed: ' . $e->getMessage()
+                ], 500);
+            }
+            return back()->with('error', 'Registration failed: ' . $e->getMessage())->withInput();
+        }
     }
 
     /**

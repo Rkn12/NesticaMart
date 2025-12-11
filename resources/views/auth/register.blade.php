@@ -702,7 +702,11 @@
                             });
                             alert(errorMsg);
                         } else {
-                            alert('An error occurred. Please try again.');
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                alert(xhr.responseJSON.message);
+                            } else {
+                                alert('An error occurred. Please try again.');
+                            }
                         }
                     }
                 });

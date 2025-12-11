@@ -105,7 +105,7 @@
         }
         
         .credentials-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #658168ff 100%);
             color: white;
             padding: 25px;
             border-radius: 10px;
@@ -338,15 +338,13 @@
                 </div>
             </div>
             
-            @if($credentials)
             <div class="credentials-box">
                 <h3>🔐 Informasi Login Anda</h3>
-                <div class="creds">{{ $credentials }}</div>
+                <div class="creds">{!! nl2br(e($credentials)) !!}</div>
                 <p style="margin: 15px 0 0; font-size: 14px; opacity: 0.9;">
                     ⚠️ Silakan ubah password setelah login pertama untuk keamanan
                 </p>
             </div>
-            @endif
             
             <div class="next-steps">
                 <h3>🚀 Langkah Selanjutnya</h3>

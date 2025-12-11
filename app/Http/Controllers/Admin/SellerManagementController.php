@@ -87,13 +87,28 @@ class SellerManagementController extends Controller
         // Jika approved, set active secara default
         if ($request->status === 'approved') {
             $seller->is_active = true;
+
+            // Buat akun User untuk penjual agar bisa login
+            $plainPassword = 'password123';
+            
+            \App\Models\User::updateOrCreate(
+                ['email' => $seller->email],
+                [
+                    'name' => $seller->owner_name ?? $seller->store_name,
+                    'password' => \Illuminate\Support\Facades\Hash::make($plainPassword),
+                    'role' => 'penjual',
+                    'seller_id' => $seller->id,
+                ]
+            );
+            
+            $credentials = "Email: {$seller->email}\nPassword: {$plainPassword}";
         }
         
         $seller->save();
         
         // Kirim email notifikasi
         if ($request->status === 'approved' && $oldStatus !== 'approved') {
-            $this->notificationController->sendApprovalNotification($seller);
+            $this->notificationController->sendApprovalNotification($seller, $credentials);
         } elseif ($request->status === 'rejected') {
             $this->notificationController->sendRejectionNotification($seller, $request->note);
         }

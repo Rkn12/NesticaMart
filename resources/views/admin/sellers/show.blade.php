@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="card">
-        <a href="/sellers" class="btn btn-primary" style="width: fit-content; margin-bottom: 20px; padding: 12px 24px; font-size: 16px;">← Kembali</a>
+        <a href="{{ route('admin.sellers.index') }}" class="btn btn-primary" style="width: fit-content; margin-bottom: 20px; padding: 12px 24px; font-size: 16px;">← Kembali</a>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
             <div>

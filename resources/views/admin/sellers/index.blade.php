@@ -115,7 +115,9 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            {{-- Lihat Detail button removed as requested --}}
+                            <a href="{{ route('admin.sellers.show', $seller->id) }}" class="btn btn-info btn-sm" title="Lihat Detail">
+                                👁️
+                            </a>
                             
                             @if($seller->status === 'pending')
                                 <button onclick="updateStatus({{ $seller->id }}, 'approved')" class="btn btn-success btn-sm" title="Setujui">
