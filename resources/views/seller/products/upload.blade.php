@@ -145,6 +145,45 @@
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(72, 58, 46, 0.3);
     }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-weight: 600;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-sm {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .btn-outline-success {
+        border: 1px solid #15803d;
+        color: #15803d;
+        background: transparent;
+    }
+
+    .btn-outline-success:hover {
+        background: #15803d;
+        color: white;
+    }
+
+    .btn-outline-danger {
+        border: 1px solid #b91c1c;
+        color: #b91c1c;
+        background: transparent;
+    }
+
+    .btn-outline-danger:hover {
+        background: #b91c1c;
+        color: white;
+    }
 </style>
 
 <div class="upload-container">
@@ -162,12 +201,12 @@
                     
                     <div class="form-group">
                         <label class="form-label">Product Name</label>
-                        <input type="text" name="name" class="form-input" placeholder="Enter product name" required>
+                        <input type="text" name="name" class="form-input" placeholder="Enter product name" value="{{ old('name') }}" required>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Description</label>
-                        <textarea name="description" class="form-textarea" placeholder="Enter product description" required></textarea>
+                        <textarea name="description" class="form-textarea" placeholder="Enter product description (min 50 chars)" required>{{ old('description') }}</textarea>
                     </div>
                 </div>
                 
@@ -177,29 +216,16 @@
                     
                     <div class="form-group">
                         <label class="form-label">Price</label>
-                        <input type="number" name="price" class="form-input" placeholder="Enter product price" required>
+                        <input type="number" name="price" class="form-input" placeholder="Enter product price" value="{{ old('price') }}" min="100" required>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Stock</label>
-                        <input type="number" name="stock" class="form-input" placeholder="Enter product stock" required>
+                        <input type="number" name="stock" class="form-input" placeholder="Enter product stock" value="{{ old('stock') }}" min="1" required>
                     </div>
                 </div>
                 
-                <!-- Category -->
-                <div class="form-section">
-                    <h3 class="section-title">Category</h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Product Category</label>
-                        <select name="category_id" class="form-select" required>
-                            <option value="">Click here to pick</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                
             </div>
             
             <!-- Right Column -->
@@ -221,43 +247,19 @@
                         <div id="product-preview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;"></div>
                     </div>
                 </div>
-                
-                <!-- Details & Material Description -->
+
+                <!-- Category -->
                 <div class="form-section">
-                    <h3 class="section-title">Details & Material Description</h3>
+                    <h3 class="section-title">Category</h3>
                     
                     <div class="form-group">
-                        <label class="form-label">Material</label>
-                        <input type="text" name="bahan" class="form-input" placeholder="e.g., Wood, Metal, Plastic">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Origin</label>
-                        <input type="text" name="origin" class="form-input" placeholder="e.g., chestnut (Castanea sativa) from Slovenia">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Material Title</label>
-                        <input type="text" name="material_title" class="form-input" placeholder="Enter material title">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Material Description</label>
-                        <input type="text" name="material_description" class="form-input" placeholder="Enter material description">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Upload Image Material</label>
-                        <label for="material-image" class="upload-area">
-                            <div class="upload-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
-                                </svg>
-                            </div>
-                            <div class="upload-text">Browse your image here</div>
-                            <input type="file" id="material-image" name="material_image" class="upload-input" accept="image/*">
-                        </label>
-                        <div id="material-preview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;"></div>
+                        <label class="form-label">Product Category</label>
+                        <select name="category_id" class="form-select" required>
+                            <option value="">Click here to pick</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -310,28 +312,6 @@ document.getElementById('product-image').addEventListener('change', function(e) 
         }
         reader.readAsDataURL(file);
     });
-});
-
-// Material image preview
-document.getElementById('material-image').addEventListener('change', function(e) {
-    const preview = document.getElementById('material-preview');
-    preview.innerHTML = '';
-    
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.style.width = '100%';
-            img.style.height = '100px';
-            img.style.objectFit = 'cover';
-            img.style.borderRadius = '8px';
-            img.style.border = '2px solid #7E991E';
-            preview.appendChild(img);
-        }
-        reader.readAsDataURL(file);
-    }
 });
 </script>
 

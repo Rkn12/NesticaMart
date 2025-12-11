@@ -495,7 +495,9 @@ if (!sellerId) {
             if (data.success && data.data.length > 0) {
                 container.innerHTML = '';
                 data.data.forEach(product => {
-                    const imageUrl = 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
+                    const imageUrl = (product.images && product.images.length > 0) 
+                        ? `/storage/${product.images[0].image_url}` 
+                        : 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
                     
                     const rating = parseFloat(product.average_rating) || 0;
                     const reviewCount = parseInt(product.review_count) || 0;
@@ -504,7 +506,7 @@ if (!sellerId) {
                     container.innerHTML += `
                         <div class="product-item">
                             <div class="product-image-wrapper">
-                                <img src="https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image" alt="${product.name}" class="product-image">
+                                <img src="${imageUrl}" alt="${product.name}" class="product-image">
                             </div>
                             <div class="product-info-grid">
                                 <div class="product-details">

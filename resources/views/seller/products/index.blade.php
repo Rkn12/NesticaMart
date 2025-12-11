@@ -286,12 +286,14 @@ function loadProducts() {
                     for (let i = 0; i < emptyStars; i++) starsHtml += '<span class="star empty">★</span>';
                     
                     const reviewText = product.review_count === 1 ? 'review' : 'reviews';
-                    const imageUrl = 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
+                    const imageUrl = product.image_url 
+                        ? `/storage/${product.image_url}` 
+                        : 'https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image';
                     
                     return `
                         <div class="product-item">
                             <div class="product-image-wrapper">
-                                <img src="https://via.placeholder.com/80x80/D5CDC2/483A2E?text=No+Image" alt="${product.name}" class="product-image">
+                                <img src="${imageUrl}" alt="${product.name}" class="product-image">
                             </div>
                             <div class="product-name">
                                 <h4>${product.name}</h4>

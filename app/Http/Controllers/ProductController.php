@@ -24,10 +24,6 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price' => 'required|integer|min:0',
             'stock' => 'required|integer|min:0',
-            'weight' => 'nullable|integer|min:0',
-            'condition' => 'required|in:new,used',
-            'location_province' => 'required|string|max:100',
-            'location_city' => 'required|string|max:100',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -47,7 +43,14 @@ class ProductController extends Controller
             ], 403);
         }
 
-        $product = Product::create($request->except('images'));
+        // Set default values for required fields not in request
+        $data = $request->except('images');
+        $data['location_province'] = $seller->province ?? 'Unknown';
+        $data['location_city'] = $seller->city ?? 'Unknown';
+        $data['condition'] = 'new';
+        $data['weight'] = 1;
+
+        $product = Product::create($data);
 
         // Handle multiple image uploads
         if ($request->hasFile('images')) {

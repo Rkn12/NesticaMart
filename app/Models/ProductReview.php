@@ -26,14 +26,6 @@ class ProductReview extends Model
         'photos' => 'array', // Cast JSON to array
     ];
 
-    /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory()
-    {
-        return \Database\Factories\ReviewProdukFactory::new();
-    }
-
     // Relasi ke produk
     public function product()
     {

@@ -53,18 +53,6 @@ class ProductUploadController extends Controller
             // Product Images
             'images' => 'required|array|min:1|max:5',
             'images.*' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            
-            // Additional fields dengan nama Indonesia
-            'merek' => 'nullable|string|max:100',
-            'garansi' => 'nullable|string|max:200',
-            'dimensi_panjang' => 'nullable|numeric|min:0',
-            'dimensi_lebar' => 'nullable|numeric|min:0',
-            'dimensi_tinggi' => 'nullable|numeric|min:0',
-            'bahan' => 'nullable|string|max:200',
-            'origin' => 'nullable|string|max:300',
-            'spesifikasi' => 'nullable|array',
-            'material_title' => 'nullable|string|max:500',
-            'material_description' => 'nullable|string|max:2000',
         ], [
             'name.required' => 'Nama produk wajib diisi',
             'description.min' => 'Deskripsi produk minimal 50 karakter',
@@ -83,27 +71,6 @@ class ProductUploadController extends Controller
         $user = Auth::user();
         $seller = Seller::where('id', $user->seller_id)->first();
 
-        // Prepare dimensi data
-        $dimensi = null;
-        if ($request->dimensi_panjang || $request->dimensi_lebar || $request->dimensi_tinggi) {
-            $dimensi = [
-                'panjang' => $request->dimensi_panjang ?? 0,
-                'lebar' => $request->dimensi_lebar ?? 0,
-                'tinggi' => $request->dimensi_tinggi ?? 0,
-                'unit' => 'cm'
-            ];
-        }
-
-        // Prepare spesifikasi data
-        $spesifikasi = [];
-        if ($request->has('spesifikasi')) {
-            foreach ($request->spesifikasi as $spec) {
-                if (!empty($spec['key']) && !empty($spec['value'])) {
-                    $spesifikasi[$spec['key']] = $spec['value'];
-                }
-            }
-        }
-
         // Create product
         $product = Product::create([
             'seller_id' => $seller->id,
@@ -112,21 +79,12 @@ class ProductUploadController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
-            'berat' => 1.0, // Default weight
+            'berat' => 1.0, // Default weight as fallback
             'kondisi' => 'baru', // Default new condition
             'location_province' => $seller->province ?? 'Unknown',
-            'location_city' => $seller->country ?? 'Unknown',
+            'location_city' => $seller->city ?? 'Unknown',
             'sold_count' => 0,
             'average_rating' => 0,
-            // Field tambahan dengan nama Indonesia
-            'merek' => $request->merek,
-            'garansi' => $request->garansi,
-            'dimensi' => $dimensi,
-            'bahan' => $request->bahan,
-            'origin' => $request->origin,
-            'spesifikasi' => $spesifikasi,
-            'material_title' => $request->material_title,
-            'material_description' => $request->material_description,
         ]);
 
         // Upload and save product images

@@ -12,6 +12,7 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SellerDashboardController;
 use App\Http\Controllers\SellerReportController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // ========================================
 // AUTH ROUTES

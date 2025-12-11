@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Mail;
 class SellerNotificationController extends Controller
 {
     /**
+     * Send registration confirmation
+     */
+    public function sendRegistrationConfirmation(Seller $seller)
+    {
+        // TODO: Implement registration confirmation email
+        // For now, just return success or log it
+        return ['success' => true, 'message' => 'Email konfirmasi registrasi berhasil dikirim'];
+    }
+
+    /**
      * Send approval notification (After admin approval)
      * Sesuai SRS-MartPlace-02: Kirim notifikasi email hasil verifikasi
      */

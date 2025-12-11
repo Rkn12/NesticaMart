@@ -7,6 +7,7 @@ use App\Models\Seller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -51,7 +52,7 @@ class ReportController extends Controller
             'title' => $title,
             'date' => now()->format('d F Y'),
             'time' => now()->format('H:i'),
-            'processedBy' => auth()->user()->name ?? 'Admin',
+            'processedBy' => Auth::user()->name ?? 'Admin',
             'sellers' => $sellers,
             'status_filter' => $statusFilter,
         ];
@@ -86,7 +87,7 @@ class ReportController extends Controller
             'title' => $title,
             'date' => now()->format('d F Y'),
             'time' => now()->format('H:i'),
-            'processedBy' => auth()->user()->name ?? 'Admin',
+            'processedBy' => Auth::user()->name ?? 'Admin',
             'sellers_by_province' => $sellersByProvince,
             'summary' => [
                 'total_sellers' => $sellers->count(),
@@ -123,11 +124,11 @@ class ReportController extends Controller
             'title' => 'Laporan Daftar Produk dan Rating',
             'date' => now()->format('d F Y'),
             'time' => now()->format('H:i'),
-            'processedBy' => auth()->user()->name ?? 'Admin',
+            'processedBy' => Auth::user()->name ?? 'Admin',
             'products' => $products,
             'summary' => [
                 'total_products' => $products->count(),
-                'average_rating' => round($products->avg('average_rating'), 2),
+                'average_rating' => round($products->where('average_rating', '>', 0)->avg('average_rating'), 2),
                 'total_reviews' => $products->sum('reviews_count'),
             ]
         ];
