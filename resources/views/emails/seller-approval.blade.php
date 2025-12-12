@@ -108,7 +108,7 @@
             background: linear-gradient(135deg, #667eea 0%, #658168ff 100%);
             color: white;
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 10px;    
             margin: 25px 0;
             text-align: center;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);

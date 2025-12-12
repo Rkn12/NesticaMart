@@ -1121,11 +1121,6 @@
                 <input type="hidden" name="rating" id="selectedRating" value="">
 
                 <div class="form-group">
-                    <label>Review title <span class="required">*</span></label>
-                    <input type="text" name="review_title" placeholder="Example: A very good product!" required>
-                </div>
-
-                <div class="form-group">
                     <label>Enter your review <span class="required">*</span></label>
                     <textarea name="comment" placeholder="Type your review here..." required></textarea>
                 </div>
