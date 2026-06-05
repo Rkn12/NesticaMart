@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Http\Controllers\SellerReportController;
 
-class SellerReportWhiteBoxTest extends TestCase
+class StokTipisTest extends TestCase
 {
     /**
      * DUPL-14-01
